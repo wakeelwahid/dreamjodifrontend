@@ -1,20 +1,28 @@
-import React, { useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import React, { useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const AuthGuard = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
   const isAuthenticated = () => {
-    return localStorage.getItem('token') !== null;
+    return localStorage.getItem("token") !== null;
   };
 
-  const publicRoutes = ['/', '/login', '/register', '/privacy', '/terms', '/refund', '/game-rules'];
-  const isPublicRoute = publicRoutes.includes(location.pathname);
+  const publicRoutes = [
+    "/",
+    "/login",
+    "/register",
+    "/privacy",
+    "/terms",
+    "/refund",
+    "/game-rules",
+  ];
+  const isPublicRoute = publicRoutes.includes(location.pathname.toLowerCase());
 
   useEffect(() => {
     if (!isPublicRoute && !isAuthenticated()) {
-      navigate('/login');
+      navigate("/login");
     }
   }, [location.pathname, isPublicRoute, navigate]);
 

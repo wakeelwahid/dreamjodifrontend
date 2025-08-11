@@ -1,7 +1,10 @@
 import axios from "axios";
 
+// Vite env variable se baseURL lo
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "/api/";
+
 const API = axios.create({
-  baseURL: "/api/",
+  baseURL: API_BASE_URL,
 });
 
 // Attach access token to requests
@@ -27,7 +30,7 @@ API.interceptors.response.use(
       const refreshToken = localStorage.getItem("refreshToken");
       if (refreshToken) {
         try {
-          const res = await axios.post("/api/token/refresh/", {
+          const res = await axios.post(`${API_BASE_URL}token/refresh/`, {
             refresh: refreshToken,
           });
           const newAccessToken = res.data.access;

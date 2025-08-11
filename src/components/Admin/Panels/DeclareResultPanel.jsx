@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
-import { color } from "framer-motion";
+import adminAxios from "../../utils/adminAxios";
 
 const DeclareResultPanel = () => {
   const [selectedGame, setSelectedGame] = useState("");
@@ -18,18 +17,10 @@ const DeclareResultPanel = () => {
 
   const declareResult = async () => {
     try {
-      const response = await axios.post(
-        "http://127.0.0.1:8000/api/admin/declare-result/",
-        {
-          game_name: selectedGame.trim().toLowerCase(),
-          winning_number: number,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
-          },
-        }
-      );
+      await adminAxios.post("/admin/declare-result/", {
+        game_name: selectedGame.trim().toLowerCase(),
+        winning_number: number,
+      });
       setMessage("Result declared successfully");
       setNumber("");
       setSelectedGame("");
@@ -42,17 +33,9 @@ const DeclareResultPanel = () => {
   // --- Undo Result Function ---
   const undoResult = async () => {
     try {
-      const response = await axios.post(
-        "http://127.0.0.1:8000/api/admin/undo-result/",
-        {
-          game_name: selectedGame.trim().toLowerCase(),
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
-          },
-        }
-      );
+      const response = await adminAxios.post("/admin/undo-result/", {
+        game_name: selectedGame.trim().toLowerCase(),
+      });
       setMessage(response.data.message || "Undo successful");
     } catch (error) {
       setMessage("Failed to undo result");
@@ -86,7 +69,7 @@ const DeclareResultPanel = () => {
       <button
         onClick={declareResult}
         className="btn dark"
-        style={{ color: "#fff", background: "#5cb805ff",marginTop:8 }}
+        style={{ color: "#fff", background: "#5cb805ff", marginTop: 8 }}
         disabled={!selectedGame || !number}
       >
         Declare
@@ -95,7 +78,12 @@ const DeclareResultPanel = () => {
         onClick={undoResult}
         className="btn dark"
         disabled={!selectedGame}
-        style={{ marginLeft: 8, color: "#fff", background: "#e53935", marginTop:8}}
+        style={{
+          marginLeft: 8,
+          color: "#fff",
+          background: "#e53935",
+          marginTop: 8,
+        }}
       >
         Undo Result
       </button>

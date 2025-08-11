@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./MyBet.css";
-import axios from "axios";
+import API from "../../../api/axiosSetup";
 
 const MyBet = () => {
   const [bets, setBets] = useState([]);
@@ -10,14 +10,7 @@ const MyBet = () => {
     const fetchBets = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get(
-          "http://127.0.0.1:8000/api/current-session/",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const res = await API.get("/current-session/");
 
         // Group by game + date
         const grouped = {};

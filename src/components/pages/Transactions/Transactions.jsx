@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import API from "../../../api/axiosSetup";
 import "./Transactions.css";
 
 const Transactions = () => {
@@ -20,11 +20,8 @@ const Transactions = () => {
     const fetchTransactions = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get("http://127.0.0.1:8000/api/transactions/", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+
+        const res = await API.get("/transactions/");
 
         const formatted = res.data.map((tx, index) => {
           let dateObj = null;
@@ -37,7 +34,9 @@ const Transactions = () => {
             if (ampm === "PM" && hour < 12) hour += 12;
             if (ampm === "AM" && hour === 12) hour = 0;
             dateObj = new Date(
-              `${year}-${month}-${day}T${hour.toString().padStart(2, "0")}:${minute}:00`
+              `${year}-${month}-${day}T${hour
+                .toString()
+                .padStart(2, "0")}:${minute}:00`
             );
           }
           return {
@@ -46,14 +45,10 @@ const Transactions = () => {
             date: dateObj
               ? dateObj.toLocaleDateString("en-IN")
               : tx.created_at || "",
-            time: dateObj
-              ? dateObj.toLocaleTimeString("en-IN")
-              : "",
+            time: dateObj ? dateObj.toLocaleTimeString("en-IN") : "",
             type: tx.type,
             amount:
-              (tx.type === "deposit" ||
-              tx.type === "win" ||
-              tx.type === "bonus"
+              (tx.type === "deposit" || tx.type === "win" || tx.type === "bonus"
                 ? "+"
                 : "-") + `₹${tx.amount}`,
             status: tx.status
@@ -79,7 +74,6 @@ const Transactions = () => {
   return (
     <div className="transactions-container">
       <div className="transactions-content">
-      
         <div className="transaction-card">
           <h2 className="card-title">Wallet History</h2>
           <div className="search-bar">
@@ -96,7 +90,10 @@ const Transactions = () => {
               {showAll ? "Show Last 15" : "Show All"}
             </button>
           </div>
-          <div className="table-container" style={{ maxHeight: "350px", overflowY: "auto" }}>
+          <div
+            className="table-container"
+            style={{ maxHeight: "350px", overflowY: "auto" }}
+          >
             <table className="transaction-table">
               <thead>
                 <tr>

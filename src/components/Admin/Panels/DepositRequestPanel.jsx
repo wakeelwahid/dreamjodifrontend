@@ -17,7 +17,7 @@ const DepositRequestPanel = () => {
 
   const fetchDeposits = async () => {
     try {
-      const res = await adminAxios.get("admin/coins-requests/");
+      const res = await adminAxios.get("/admin/coins-requests/");
       const pendingDeposits = res.data.filter(
         (deposit) => deposit.status === "pending"
       );
@@ -37,7 +37,7 @@ const DepositRequestPanel = () => {
 
   const confirmAction = async () => {
     try {
-      await adminAxios.post("admin/coins-action/", {
+      await adminAxios.post("/admin/coins-action/", {
         deposit_id: selectedDeposit.id,
         action: actionType,
       });

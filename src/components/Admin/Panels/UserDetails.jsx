@@ -35,17 +35,19 @@ const UserDetails = () => {
     setStatusMsg("");
     setBackupData(null);
     try {
-      const userRes = await adminAxios.get(`admin/user/${userId}/details/`);
+      const userRes = await adminAxios.get(`/admin/user/${userId}/details/`);
       setUser(userRes.data);
 
-      const depRes = await adminAxios.get(`admin/user/${userId}/deposits/`);
+      const depRes = await adminAxios.get(`/admin/user/${userId}/deposits/`);
       setDeposits(depRes.data);
 
-      const withRes = await adminAxios.get(`admin/user/${userId}/withdrawals/`);
+      const withRes = await adminAxios.get(
+        `/admin/user/${userId}/withdrawals/`
+      );
       setWithdrawals(withRes.data);
 
       const betRes = await adminAxios.get(
-        `admin/user/${userId}/bets/?months=2`
+        `/admin/user/${userId}/bets/?months=2`
       );
       setBets(betRes.data);
 
@@ -110,7 +112,12 @@ const UserDetails = () => {
 
   // Color palette for date rows
   const dateColors = [
-    "#2e2e4d", "#34345c", "#39396b", "#40407a", "#474789", "#4e4e98"
+    "#2e2e4d",
+    "#34345c",
+    "#39396b",
+    "#40407a",
+    "#474789",
+    "#4e4e98",
   ];
 
   const handleBlockUser = async () => {
@@ -155,14 +162,8 @@ const UserDetails = () => {
     setActionLoading(true);
     setStatusMsg("");
     try {
-      const res = await fetch(`/api/admin/undo_reset_user/${userId}/`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
-          "Content-Type": "application/json",
-        },
-      });
-      const data = await res.json();
+      const res = await adminAxios.post(`/admin/undo_reset_user/${userId}/`);
+      const data = res.data;
       if (data.success) {
         setWasReset(false);
         setStatusMsg("User data successfully restore ho gaya.");
@@ -181,14 +182,8 @@ const UserDetails = () => {
     setActionLoading(true);
     setStatusMsg("");
     try {
-      const res = await fetch(`/api/admin/user_backup/${userId}/`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
-          "Content-Type": "application/json",
-        },
-      });
-      const data = await res.json();
+      const res = await adminAxios.get(`/admin/user_backup/${userId}/`);
+      const data = res.data;
       if (data.success && data.backup) {
         setBackupData(data.backup);
       } else {
@@ -355,25 +350,36 @@ const UserDetails = () => {
               </tr>
             </thead>
             <tbody>
-              {Object.entries(groupByDate(deposits)).map(([date, items], idx) => (
-                <React.Fragment key={date}>
-                  <tr style={{ background: dateColors[idx % dateColors.length], color: "#fff" }}>
-                    <td colSpan={4} style={{ fontWeight: 600 }}>{date}</td>
-                  </tr>
-                  {items.map((dep) => (
-                    <tr key={dep.id}>
-                      <td>{formatDate(dep.created_at)}</td>
-                      <td className="st-amount">₹{dep.amount}</td>
-                      <td>
-                        <span className={`st-status-badge st-${dep.status.toLowerCase()}`}>
-                          {dep.status}
-                        </span>
+              {Object.entries(groupByDate(deposits)).map(
+                ([date, items], idx) => (
+                  <React.Fragment key={date}>
+                    <tr
+                      style={{
+                        background: dateColors[idx % dateColors.length],
+                        color: "#fff",
+                      }}
+                    >
+                      <td colSpan={4} style={{ fontWeight: 600 }}>
+                        {date}
                       </td>
-                      <td className="st-utr">{dep.utr}</td>
                     </tr>
-                  ))}
-                </React.Fragment>
-              ))}
+                    {items.map((dep) => (
+                      <tr key={dep.id}>
+                        <td>{formatDate(dep.created_at)}</td>
+                        <td className="st-amount">₹{dep.amount}</td>
+                        <td>
+                          <span
+                            className={`st-status-badge st-${dep.status.toLowerCase()}`}
+                          >
+                            {dep.status}
+                          </span>
+                        </td>
+                        <td className="st-utr">{dep.utr}</td>
+                      </tr>
+                    ))}
+                  </React.Fragment>
+                )
+              )}
             </tbody>
           </table>
         </div>
@@ -401,25 +407,36 @@ const UserDetails = () => {
               </tr>
             </thead>
             <tbody>
-              {Object.entries(groupByDate(withdrawals)).map(([date, items], idx) => (
-                <React.Fragment key={date}>
-                  <tr style={{ background: dateColors[idx % dateColors.length], color: "#fff" }}>
-                    <td colSpan={4} style={{ fontWeight: 600 }}>{date}</td>
-                  </tr>
-                  {items.map((w) => (
-                    <tr key={w.id}>
-                      <td>{formatDate(w.created_at)}</td>
-                      <td className="st-amount">₹{w.amount}</td>
-                      <td>
-                        <span className={`st-status-badge st-${w.status.toLowerCase()}`}>
-                          {w.status}
-                        </span>
+              {Object.entries(groupByDate(withdrawals)).map(
+                ([date, items], idx) => (
+                  <React.Fragment key={date}>
+                    <tr
+                      style={{
+                        background: dateColors[idx % dateColors.length],
+                        color: "#fff",
+                      }}
+                    >
+                      <td colSpan={4} style={{ fontWeight: 600 }}>
+                        {date}
                       </td>
-                      <td className="st-utr">{w.utr}</td>
                     </tr>
-                  ))}
-                </React.Fragment>
-              ))}
+                    {items.map((w) => (
+                      <tr key={w.id}>
+                        <td>{formatDate(w.created_at)}</td>
+                        <td className="st-amount">₹{w.amount}</td>
+                        <td>
+                          <span
+                            className={`st-status-badge st-${w.status.toLowerCase()}`}
+                          >
+                            {w.status}
+                          </span>
+                        </td>
+                        <td className="st-utr">{w.utr}</td>
+                      </tr>
+                    ))}
+                  </React.Fragment>
+                )
+              )}
             </tbody>
           </table>
         </div>
@@ -469,57 +486,66 @@ const UserDetails = () => {
               </tr>
             </thead>
             <tbody>
-              {Object.entries(groupByDate(filteredBets)).map(([date, items], idx) => (
-                <React.Fragment key={date}>
-                  <tr style={{ background: dateColors[idx % dateColors.length], color: "#fff" }}>
-                    <td colSpan={8} style={{ fontWeight: 600 }}>{date}</td>
-                  </tr>
-                  {items.map((bet) => (
-                    <tr key={bet.id}>
-                      <td>{formatDate(bet.created_at)}</td>
-                      <td className="st-game-name">{bet.game_name}</td>
-                      <td>
-                        {bet.bet_type === "number" ? bet.number : "-"}
-                        {bet.bet_type === "number" && (
-                          <span style={{ color: "#888", fontSize: "12px" }}>
-                            {" "}
-                            (₹{bet.amount})
-                          </span>
-                        )}
+              {Object.entries(groupByDate(filteredBets)).map(
+                ([date, items], idx) => (
+                  <React.Fragment key={date}>
+                    <tr
+                      style={{
+                        background: dateColors[idx % dateColors.length],
+                        color: "#fff",
+                      }}
+                    >
+                      <td colSpan={8} style={{ fontWeight: 600 }}>
+                        {date}
                       </td>
-                      <td>
-                        {bet.bet_type === "andar" ? bet.number : "-"}
-                        {bet.bet_type === "andar" && (
-                          <span style={{ color: "#888", fontSize: "12px" }}>
-                            {" "}
-                            (₹{bet.amount})
-                          </span>
-                        )}
-                      </td>
-                      <td>
-                        {bet.bet_type === "bahar" ? bet.number : "-"}
-                        {bet.bet_type === "bahar" && (
-                          <span style={{ color: "#888", fontSize: "12px" }}>
-                            {" "}
-                            (₹{bet.amount})
-                          </span>
-                        )}
-                      </td>
-                      <td className="st-amount">₹{bet.amount}</td>
-                      <td>
-                        <span className={`st-status-badge st-${bet.status}`}>
-                          {bet.status === "won"
-                            ? "Won"
-                            : bet.status === "lost"
-                            ? "Lost"
-                            : bet.status}
-                        </span>
-                      </td>
-                      <td className="st-amount">₹{bet.win_amount}</td>
                     </tr>
-                  ))}
-                </React.Fragment>
-              ))}
+                    {items.map((bet) => (
+                      <tr key={bet.id}>
+                        <td>{formatDate(bet.created_at)}</td>
+                        <td className="st-game-name">{bet.game_name}</td>
+                        <td>
+                          {bet.bet_type === "number" ? bet.number : "-"}
+                          {bet.bet_type === "number" && (
+                            <span style={{ color: "#888", fontSize: "12px" }}>
+                              {" "}
+                              (₹{bet.amount})
+                            </span>
+                          )}
+                        </td>
+                        <td>
+                          {bet.bet_type === "andar" ? bet.number : "-"}
+                          {bet.bet_type === "andar" && (
+                            <span style={{ color: "#888", fontSize: "12px" }}>
+                              {" "}
+                              (₹{bet.amount})
+                            </span>
+                          )}
+                        </td>
+                        <td>
+                          {bet.bet_type === "bahar" ? bet.number : "-"}
+                          {bet.bet_type === "bahar" && (
+                            <span style={{ color: "#888", fontSize: "12px" }}>
+                              {" "}
+                              (₹{bet.amount})
+                            </span>
+                          )}
+                        </td>
+                        <td className="st-amount">₹{bet.amount}</td>
+                        <td>
+                          <span className={`st-status-badge st-${bet.status}`}>
+                            {bet.status === "won"
+                              ? "Won"
+                              : bet.status === "lost"
+                              ? "Lost"
+                              : bet.status}
+                          </span>
+                        </td>
+                        <td className="st-amount">₹{bet.win_amount}</td>
+                      </tr>
+                    ))}
+                  </React.Fragment>
+                )
+              )}
             </tbody>
           </table>
         </div>

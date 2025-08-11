@@ -9,26 +9,6 @@ const BetSuccessPage = () => {
   const [ticket, setTicket] = useState("");
   const [dateTime, setDateTime] = useState({ date: "", time: "" });
 
-  // useEffect(() => {
-  //   setCurrentDateTime();
-  //   createCoins();
-
-  //   const interval = setInterval(() => {
-  //     const coins = document.querySelectorAll(".coin");
-  //     if (coins.length < 20) {
-  //       createCoins();
-  //     }
-  //   }, 3000);
-
-  //   const timeout = setTimeout(() => {
-  //     navigate("/");
-  //   }, 15000); // auto-redirect after 15 sec
-
-  //   return () => {
-  //     clearInterval(interval);
-  //     clearTimeout(timeout);
-  //   };
-  // }, []);
 
   const generateTicketNumber = () => {
     const num = Math.floor(Math.random() * 90000) + 10000;

@@ -7,7 +7,7 @@ import {
   FaUserTag,
 } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import API from "../../../api/axiosSetup";
 import "./Auth.css";
 
 const Register = () => {
@@ -89,7 +89,7 @@ const Register = () => {
 
     try {
       setError(""); // clear previous errors
-      await axios.post("http://127.0.0.1:8000/api/register/", {
+      await API.post("/register/", {
         username: formData.username.trim(),
         mobile: formData.mobile.trim(),
         email: formData.email?.trim() || "",

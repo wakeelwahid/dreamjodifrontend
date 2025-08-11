@@ -38,7 +38,7 @@ const UsersPanel = () => {
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      const response = await adminAxios.get("admin/users-stats/");
+      const response = await adminAxios.get("/admin/users-stats/");
       setUsers(response.data);
       setError(null);
     } catch (error) {
@@ -248,7 +248,7 @@ const UsersPanel = () => {
                 <th>Main Balance</th>
                 <th>Total Coins</th>
                 <th>Total Redeem</th>
-                <th>Winning Amount</th> 
+                <th>Winning Amount</th>
                 <th>Today Coin</th>
                 <th>Today Redeem</th>
                 <th>Total Referrals</th>

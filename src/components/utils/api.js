@@ -15,7 +15,7 @@ axios.interceptors.response.use(
       if (refreshToken) {
         try {
           const res = await axios.post(
-            "http://127.0.0.1:8000/api/token/refresh/",
+            `${BASE_URL}/token/refresh/`,
             { refresh: refreshToken }
           );
           const newAccessToken = res.data.access;
@@ -36,7 +36,7 @@ axios.interceptors.response.use(
   }
 );
 
-const BASE_URL = "https://stproject1.onrender.com/api";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://stproject1.onrender.com/api";
 
 const authHeaders = () => ({
   headers: {
@@ -91,12 +91,10 @@ export const fetchTransactions = async () => {
   }
 };
 
-// utils/api.js
-
 export const submitUTR = async (transaction_id, utr_number) => {
   const token = localStorage.getItem("access_token");
   return await axios.post(
-    "http://127.0.0.1:8000/api/wallet/submit-utr/",
+    `${BASE_URL}/wallet/submit-utr/`,
     { transaction_id, utr_number },
     {
       headers: { Authorization: `Bearer ${token}` },

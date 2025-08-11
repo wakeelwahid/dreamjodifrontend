@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import "./Header.css";
-import axios from "axios";
+import API from "../../api/axiosSetup";
 
 const Header = () => {
   const [sidebarActive, setSidebarActive] = useState(false);
@@ -60,12 +60,7 @@ const Header = () => {
       try {
         const token = localStorage.getItem("token");
         if (token) {
-          const response = await axios.get(
-            "http://127.0.0.1:8000/api/balance/",
-            {
-              headers: { Authorization: `Bearer ${token}` },
-            }
-          );
+          const response = await API.get("/balance/");
           setWalletData({
             balance: parseFloat(response.data.balance) || 0,
             winnings: parseFloat(response.data.winnings) || 0,

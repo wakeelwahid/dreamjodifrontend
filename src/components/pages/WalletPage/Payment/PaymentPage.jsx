@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import "./PaymentPage.css";
 import infoIcon from "../../../../assets/paytm-icon.png";
 import { useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
+import API from "../../../../api/axiosSetup";
 
 const PaymentPage = () => {
   const location = useLocation();
@@ -21,14 +21,7 @@ const PaymentPage = () => {
     const fetchQRImage = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get(
-          "http://localhost:8000/api/get-photos/",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await API.get("/get-photos/");
         if (response.data.length > 0) {
           // Pick a random image from the list
           const randomIdx = Math.floor(Math.random() * response.data.length);
@@ -69,20 +62,11 @@ const PaymentPage = () => {
     try {
       const token = localStorage.getItem("token");
 
-      const response = await axios.post(
-        "http://127.0.0.1:8000/api/coin-requests/",
-        {
-          amount: amount,
-          utr_number: utr,
-          payment_method: paymentMethod,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await API.post("/coin-requests/", {
+        amount: amount,
+        utr_number: utr,
+        payment_method: paymentMethod,
+      });
 
       navigate("/addchipssuccess", {
         state: {

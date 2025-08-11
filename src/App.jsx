@@ -96,7 +96,7 @@ function App() {
       }
       try {
         const headers = { Authorization: `Bearer ${token}` };
-        const res = await API.get("profile/", { headers });
+        const res = await API.get("/profile/", { headers });
         if (res.data.status === "blocked") {
           setBlocked(true);
           localStorage.removeItem("token");

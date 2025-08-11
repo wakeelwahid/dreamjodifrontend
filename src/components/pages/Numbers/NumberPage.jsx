@@ -101,7 +101,7 @@ function NumberPage() {
           bet_type: bet.section === "all" ? "number" : bet.section,
           amount: bet.amount,
         };
-        await API.post("place-entry/", payload);
+        await API.post("/place-entry/", payload);
       }
       navigate("/ordersuccess", {
         state: {

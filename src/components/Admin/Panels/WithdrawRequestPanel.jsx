@@ -17,7 +17,7 @@ const WithdrawRequestPanel = () => {
 
   const fetchWithdrawals = async () => {
     try {
-      const res = await adminAxios.get("admin/redeem-requests/");
+      const res = await adminAxios.get("/admin/redeem-requests/");
       // Only show pending withdrawals in this panel
       const pendingWithdrawals = res.data.filter(
         (withdraw) => !withdraw.is_approved && !withdraw.is_rejected
@@ -38,7 +38,7 @@ const WithdrawRequestPanel = () => {
 
   const confirmAction = async () => {
     try {
-      await adminAxios.post("admin/redeem-action/", {
+      await adminAxios.post("/admin/redeem-action/", {
         withdraw_id: selectedWithdraw.id,
         action: actionType,
       });

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FaMobileAlt, FaLock } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import API from "../../../api/axiosSetup";
 import "./Auth.css";
 
 const Login = () => {
@@ -42,7 +42,7 @@ const Login = () => {
     }
 
     try {
-      const response = await axios.post("http://127.0.0.1:8000/api/login/", {
+      const response = await API.post("/login/", {
         mobile,
         password,
       });

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./Refers.css";
-import axios from "axios";
+import API from "../../../api/axiosSetup";
 
 const Refers = () => {
   const [referralData, setReferralData] = useState(null);
@@ -20,12 +20,8 @@ const Refers = () => {
         }
 
         const [referralRes, walletRes] = await Promise.all([
-          axios.get("http://127.0.0.1:8000/api/user/my-referrals/", {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
-          axios.get("http://127.0.0.1:8000/api/balance/", {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
+          API.get("/user/my-referrals/"),
+          API.get("/balance/"),
         ]);
 
         setReferralData(referralRes.data);

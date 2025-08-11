@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import API from "../../../api/axiosSetup";
 import { useNavigate } from "react-router-dom";
 import "./Auth.css";
 
@@ -24,14 +24,11 @@ const ForgotPassword = () => {
       return;
     }
     try {
-      const res = await axios.post(
-        "http://127.0.0.1:8000/api/forgot-password/",
-        {
-          username,
-          mobile,
-          new_password: newPassword,
-        }
-      );
+      const res = await API.post("/forgot-password/", {
+        username,
+        mobile,
+        new_password: newPassword,
+      });
       setMessage(res.data.message);
       setTimeout(() => navigate("/login"), 1500);
     } catch (err) {

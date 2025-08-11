@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./WithdrawChips.css";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import API from "../../../../api/axiosSetup";
 
 const WithdrawChips = () => {
   const [amount, setAmount] = useState("");
@@ -31,16 +31,7 @@ const WithdrawChips = () => {
     }
 
     try {
-      const token = localStorage.getItem("token");
-      const res = await axios.post(
-        "http://127.0.0.1:8000/api/withdraw/",
-        { amount: parseFloat(amount) },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await API.post("/withdraw/", { amount: parseFloat(amount) });
 
       setSuccess(
         res.data.message || "Withdraw request submitted successfully!"

@@ -35,8 +35,8 @@ const ProfilePage = () => {
         }
         const headers = { Authorization: `Bearer ${token}` };
         const [profileRes, walletRes] = await Promise.all([
-          API.get("profile/", { headers }),
-          API.get("balance/", { headers }),
+          API.get("/profile/", { headers }),
+          API.get("/balance/", { headers }),
         ]);
         setUser(profileRes.data);
         setWallet(walletRes.data);
@@ -83,7 +83,7 @@ const ProfilePage = () => {
         setEditError("No changes to update.");
         return;
       }
-      const res = await API.post("edit_profile/", payload, { headers });
+      const res = await API.post("/edit_profile/", payload, { headers });
       setUser((prev) => ({
         ...prev,
         username: res.data.username,

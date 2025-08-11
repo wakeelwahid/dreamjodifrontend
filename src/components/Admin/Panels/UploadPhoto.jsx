@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import adminAxios from "../../utils/adminAxios";
 import "./panels.css";
 
 const UploadPhoto = () => {
@@ -12,22 +13,9 @@ const UploadPhoto = () => {
   useEffect(() => {
     const fetchPhotos = async () => {
       try {
-        const token = localStorage.getItem("adminToken");
-        const response = await fetch(
-          "http://localhost:8000/api/admin/get-photos/",
-          {
-            headers: {
-              Authorization: token ? `Bearer ${token}` : undefined,
-            },
-          }
-        );
-        const data = await response.json();
-        if (!response.ok) {
-          alert(data.error || "Failed to fetch photos.");
-          return;
-        }
+        const response = await adminAxios.get("/admin/get-photos/");
         // Normalize photo objects to always have id, url, and title fields
-        const normalizedPhotos = (data || []).map((photo) => ({
+        const normalizedPhotos = (response.data || []).map((photo) => ({
           id: photo.id,
           url: photo.image || photo.url, // handle both possible keys
           title: photo.title || "",
@@ -37,9 +25,8 @@ const UploadPhoto = () => {
         alert("Failed to fetch photos.");
       }
     };
-
-    fetchPhotos(); // Call fetchPhotos when the component mounts
-  }, []); // Empty dependency array means this runs once after initial render
+    fetchPhotos();
+  }, []);
 
   // Handle file change to update preview and photo object
   const handleFileChange = (e) => {
@@ -70,24 +57,12 @@ const UploadPhoto = () => {
     formData.append("title", currentPhoto.title);
 
     try {
-      const token = localStorage.getItem("adminToken");
-      const response = await fetch(
-        "http://localhost:8000/api/admin/upload-photo/",
-        {
-          method: "POST",
-          body: formData,
-          headers: {
-            Authorization: token ? `Bearer ${token}` : undefined,
-          },
-        }
-      );
-      const data = await response.json();
-      if (!response.ok) {
-        alert(
-          data.error || Object.values(data).flat().join("\n") || "Upload failed"
-        );
-        return;
-      }
+      const response = await adminAxios.post("/admin/upload-photo/", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      const data = response.data;
       setPhotos((prevPhotos) => [
         ...prevPhotos,
         {
@@ -115,21 +90,7 @@ const UploadPhoto = () => {
     if (!confirmDelete) return;
 
     try {
-      const token = localStorage.getItem("adminToken");
-      const response = await fetch(
-        `http://localhost:8000/api/admin/delete-photo/${id}/`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: token ? `Bearer ${token}` : undefined,
-          },
-        }
-      );
-      if (!response.ok) {
-        const data = await response.json();
-        alert(data.error || "Failed to delete photo.");
-        return;
-      }
+      await adminAxios.delete(`/admin/delete-photo/${id}/`);
       setPhotos(photos.filter((photo) => photo.id !== id));
       if (currentPhoto && currentPhoto.id === id) {
         setCurrentPhoto(null);
@@ -244,11 +205,7 @@ const UploadPhoto = () => {
                     <td className="upload-photo-serial">{idx + 1}</td>
                     <td>
                       <img
-                        src={
-                          photo.url && photo.url.startsWith("http")
-                            ? photo.url
-                            : `http://localhost:8000${photo.url}`
-                        }
+                        src={photo.url}
                         alt={photo.title}
                         className="upload-photo-thumbnail-table"
                         style={{

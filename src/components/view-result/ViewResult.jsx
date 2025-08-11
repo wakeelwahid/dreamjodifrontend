@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "../../api/axiosSetup";
+import API from "../../api/axiosSetup";
 import { motion } from "framer-motion";
 import "./ViewResult.css";
 
@@ -31,8 +31,7 @@ const ViewResult = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     const headers = token ? { Authorization: `Bearer ${token}` } : {};
-    axios
-      .get("/result-history/", { headers })
+    API.get("/result-history/", { headers })
       .then((res) => {
         setResults(res.data);
         if (res.data.length > 0) {
@@ -121,9 +120,13 @@ const ViewResult = () => {
           <table className="results-table">
             <thead>
               <tr>
-                <th className="date-column" style={{backgroundColor:"red"}}>Date</th>
+                <th className="date-column" style={{ backgroundColor: "red" }}>
+                  Date
+                </th>
                 {GAME_NAMES.map((game) => (
-                  <th key={game} style={{backgroundColor:"red"}}>{game}</th>
+                  <th key={game} style={{ backgroundColor: "red" }}>
+                    {game}
+                  </th>
                 ))}
               </tr>
             </thead>
@@ -133,9 +136,9 @@ const ViewResult = () => {
                   key={date}
                   className={`excel-row ${
                     index % 2 === 0 ? "excel-row-even" : "excel-row-odd"
-                  } ${index === 0 ? "latest-row" : ""}`} 
+                  } ${index === 0 ? "latest-row" : ""}`}
                 >
-                  <td className="date-column" >
+                  <td className="date-column">
                     {new Date(date).toLocaleDateString("en-GB", {
                       day: "2-digit",
                       month: "short",

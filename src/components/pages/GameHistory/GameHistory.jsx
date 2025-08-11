@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./GameHistory.css";
-import axios from "axios";
+import API from "../../../api/axiosSetup";
 
 const GameHistory = () => {
   const [bets, setBets] = useState([]);
@@ -20,11 +20,7 @@ const GameHistory = () => {
           return;
         }
         // Use correct API endpoint
-        const res = await axios.get("/api/view-entry-history/", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const res = await API.get("/view-entry-history/");
 
         // Grouping by game + timestamp
         const grouped = {};
@@ -110,7 +106,6 @@ const GameHistory = () => {
     <div className="game-history-container">
       <header className="history-header">
         <h1 className="history-title">ROUND HISTORY</h1>
-       
       </header>
 
       <div className="filter-controls">
@@ -146,7 +141,6 @@ const GameHistory = () => {
         </div>
       ) : currentBets.length === 0 ? (
         <div className="no-results">
-         
           <p>No Entries found for your selection</p>
           <button
             className="refresh-btn"

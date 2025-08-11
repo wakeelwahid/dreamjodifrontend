@@ -1,8 +1,12 @@
 // utils/adminAxios.js
 import axios from "axios";
 
+// Vite env variable se baseURL lo
+const ADMIN_API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000/api/";
+
 const adminAxios = axios.create({
-  baseURL: "http://127.0.0.1:8000/api/",
+  baseURL: ADMIN_API_BASE_URL,
 });
 
 adminAxios.interceptors.request.use((config) => {
@@ -28,12 +32,9 @@ adminAxios.interceptors.response.use(
       const refreshToken = localStorage.getItem("adminRefreshToken");
       if (refreshToken) {
         try {
-          const res = await axios.post(
-            "http://127.0.0.1:8000/api/token/refresh/",
-            {
-              refresh: refreshToken,
-            }
-          );
+          const res = await axios.post(`${ADMIN_API_BASE_URL}token/refresh/`, {
+            refresh: refreshToken,
+          });
           const newAccessToken = res.data.access;
           localStorage.setItem("adminToken", newAccessToken);
           // Update header and retry original request

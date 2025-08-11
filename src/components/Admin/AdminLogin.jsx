@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import adminAxios from "../utils/adminAxios";
 import "./AdminLogin.css";
 
 const AdminLogin = () => {
@@ -20,7 +20,7 @@ const AdminLogin = () => {
 
     try {
       // Use the admin token endpoint here
-      const res = await axios.post("/api/admin/token/", {
+      const res = await adminAxios.post("admin/token/", {
         username,
         password,
       });
