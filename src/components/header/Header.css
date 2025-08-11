@@ -1,0 +1,464 @@
+/* Base Styles */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #000;
+  overflow-x: hidden;
+  --gold: #FFD700;
+  --nav-bg: rgba(0, 0, 0, 0.9);
+  --neon-blue: #00f3ff;
+}
+
+.header-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+/* Navbar */
+.navbar-custom {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  box-shadow: 0 5px 15px rgba(0, 243, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-bottom: 2px solid var(--neon-blue);
+}
+
+/* Header Top Section */
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 15px;
+  border-bottom: 1px solid rgba(0, 243, 255, 0.2);
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.profile-icon {
+  background: rgba(212,175,55,0.2);
+  border: 2px solid var(--gold);
+  border-radius: 50%;
+  color: var(--gold);
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 45px;
+  height: 45px;
+  transition: all 0.3s ease;
+}
+
+.profile-icon:hover {
+  background: rgba(212,175,55,0.4);
+  transform: scale(1.1);
+}
+
+.brand-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--gold);
+  font-size: 1.8rem;
+  font-weight: bold;
+  text-shadow: 0 0 10px rgba(212,175,55,0.7);
+}
+
+.brand-subtitle {
+  color: #b8b8b8;
+  font-size: 0.85rem;
+  margin-top: 2px;
+  font-weight: 400;
+}
+
+.wallet-display {
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 20px;
+  padding: 6px 15px;
+  border: 2px solid #00ff00;
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+}
+
+.wallet-amount-display {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #00ff00;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.wallet-icon {
+  font-size: 0.9rem;
+}
+
+/* Header Bottom Section */
+.header-bottom {
+  padding: 5px 15px;
+}
+
+.info-boxes {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.info-box {
+  background: rgba(0, 0, 0, 0.6);
+  border: 2px solid #00f3ff;
+  border-radius: 12px;
+  padding: 12px;
+  text-align: center;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.info-box.highlight {
+  border-color: #ff6b35;
+  background: rgba(255, 107, 53, 0.1);
+}
+
+.info-box:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 243, 255, 0.4);
+}
+
+.info-icon {
+  font-size: 1.2rem;
+  margin-bottom: 5px;
+}
+
+.info-number {
+  color: var(--gold);
+  font-weight: bold;
+  font-size: 1rem;
+  margin-bottom: 2px;
+}
+
+.info-label {
+  color: #ddd;
+  font-size: 0.7rem;
+  line-height: 1.2;
+}
+
+/* Mobile Sidebar */
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 1500;
+  backdrop-filter: blur(4px);
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 300px;
+  height: 100vh;
+  background: linear-gradient(180deg, #0a0a0a 0%, #1a1a2e 20%, #16213e 100%);
+  z-index: 1501;
+  box-shadow: 5px 0 25px rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  border-right: 3px solid var(--gold);
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.sidebar-header {
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--gold);
+  border-bottom: 2px solid rgba(212, 175, 55, 0.3);
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.sidebar-header h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-shadow: 0 0 10px rgba(212, 175, 55, 0.7);
+  margin: 0;
+}
+
+.sidebar-header button {
+  background: rgba(212, 175, 55, 0.1);
+  border: 2px solid var(--gold);
+  border-radius: 50%;
+  color: var(--gold);
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar-header button:hover {
+  background: rgba(212, 175, 55, 0.2);
+  transform: rotate(180deg);
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+}
+
+.sidebar-items {
+  padding: 15px 0;
+  overflow-y: auto;
+  flex-grow: 1;
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  color: #e0e0e0;
+  text-decoration: none;
+  margin: 2px 10px;
+  border-radius: 12px;
+  border-left: 4px solid transparent;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  position: relative;
+  overflow: hidden;
+}
+
+.sidebar-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.1), transparent);
+  transition: left 0.5s ease;
+}
+
+.sidebar-item:hover::before {
+  left: 100%;
+}
+
+.sidebar-item i {
+  margin-right: 15px;
+  width: 20px;
+  text-align: center;
+  font-size: 1.1rem;
+  color: var(--gold);
+}
+
+.sidebar-item:hover {
+  background: rgba(212, 175, 55, 0.15);
+  border-left-color: var(--gold);
+  color: var(--gold);
+  transform: translateX(5px);
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
+}
+
+.sidebar-item.active {
+  background: rgba(212, 175, 55, 0.2);
+  border-left-color: var(--gold);
+  color: var(--gold);
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+}
+
+.logout-btn {
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  font-size: inherit;
+  cursor: pointer;
+  color: #ff6b6b;
+  margin-top: 10px;
+  border-top: 1px solid rgba(212, 175, 55, 0.2);
+  padding-top: 20px;
+}
+
+.logout-btn:hover {
+  background: rgba(255, 107, 107, 0.15) !important;
+  color: #ff5252 !important;
+  border-left-color: #ff5252 !important;
+}
+
+/* Rules buttons */
+.rules-btn-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 999;
+}
+
+.rules-button {
+  background: linear-gradient(135deg, var(--gold), #ffed4e);
+  color: #000;
+  padding: 10px 15px;
+  border-radius: 25px;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 0.8rem;
+  box-shadow: 0 3px 10px rgba(212, 175, 55, 0.4);
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.rules-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(212, 175, 55, 0.6);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .header-top {
+    padding: 10px 15px;
+  }
+
+  .brand-title {
+    font-size: 1.4rem;
+  }
+
+  .brand-subtitle {
+    font-size: 0.75rem;
+  }
+
+  .wallet-amount-display {
+    font-size: 0.9rem;
+    padding: 5px 12px;
+  }
+
+  .sidebar {
+    width: 280px;
+  }
+
+  .sidebar-header {
+    padding: 18px;
+  }
+
+  .sidebar-item {
+    padding: 12px 18px;
+    margin: 2px 8px;
+  }
+
+  .header-bottom {
+    padding: 8px 15px;
+  }
+
+  .info-boxes {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .info-box {
+    padding: 8px;
+  }
+
+  .info-number {
+    font-size: 0.9rem;
+  }
+
+  .info-label {
+    font-size: 0.65rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .brand-title {
+    font-size: 1.2rem;
+  }
+
+  .brand-subtitle {
+    font-size: 0.7rem;
+  }
+
+  .wallet-amount-display {
+    font-size: 0.8rem;
+    padding: 4px 10px;
+  }
+
+  .wallet-icon {
+    font-size: 0.8rem;
+  }
+
+  .sidebar {
+    width: 260px;
+  }
+
+  .sidebar-header {
+    padding: 15px;
+  }
+
+  .sidebar-header h3 {
+    font-size: 1.3rem;
+  }
+
+  .sidebar-item {
+    padding: 10px 15px;
+    margin: 1px 6px;
+    font-size: 0.9rem;
+  }
+
+  .sidebar-item i {
+    margin-right: 12px;
+    font-size: 1rem;
+  }
+
+  .info-boxes {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+
+  .info-box {
+    padding: 6px;
+  }
+
+  .info-number {
+    font-size: 0.8rem;
+  }
+
+  .info-label {
+    font-size: 0.6rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .sidebar {
+    width: 240px;
+  }
+  
+  .wallet-amount-display {
+    font-size: 0.75rem;
+    padding: 3px 8px;
+  }
+}
+
+/* Header spacing handled by App.css padding-top */

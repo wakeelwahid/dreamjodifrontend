@@ -1,0 +1,152 @@
+.wc-container {
+  max-width: 500px;
+  margin: 2rem auto;
+  padding: 2rem;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #e2e8f0;
+  background: #1a202c;
+  border-radius: 12px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.25);
+  padding-top: 110px;
+}
+
+.wc-header {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.wc-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 0.5rem;
+}
+
+.wc-underline {
+  width: 60px;
+  height: 3px;
+  background: #4fd1c5;
+  margin: 0 auto;
+  border-radius: 3px;
+}
+
+.wc-notice-box {
+  display: flex;
+  align-items: flex-start;
+  background: #2d3748;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  border-left: 4px solid #f6ad55;
+}
+
+.wc-alert-icon {
+  background: #f6ad55;
+  color: #1a202c;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  margin-right: 1rem;
+  flex-shrink: 0;
+}
+
+.wc-notice-text {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #e2e8f0;
+}
+
+.wc-card {
+  background: #2d3748;
+  padding: 1.25rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+}
+
+.wc-subtitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #81e6d9;
+  margin-bottom: 1rem;
+}
+
+.wc-divider {
+  height: 1px;
+  background-color: #4a5568;
+  margin: 1.25rem 0;
+}
+
+.wc-detail-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #4a5568;
+}
+
+.wc-detail-row:last-child {
+  border-bottom: none;
+}
+
+.wc-detail-label {
+  font-weight: 500;
+  color: #a0aec0;
+}
+
+.wc-detail-value {
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.wc-subsection-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #81e6d9;
+  margin-bottom: 0.75rem;
+}
+
+.wc-note-box {
+  background: #2d3748;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid #4a5568;
+}
+
+.wc-note-text {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: #a0aec0;
+}
+
+.wc-confirm-button {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #38b2ac;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-top: 1rem;
+  text-align: center;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.wc-confirm-button:hover {
+  background-color: #319795;
+}
+
+.wc-button-text {
+  font-size: 0.9rem;
+}
+
+.wc-button-hindi {
+  font-size: 0.75rem;
+  opacity: 0.9;
+}

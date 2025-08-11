@@ -1,0 +1,316 @@
+.excel-row {
+  background: #fff;
+  color: #222;
+}
+.excel-row-even {
+  background: #f6f8fa;
+}
+.excel-row-odd {
+  background: #fff;
+}
+.excel-row td,
+.excel-row th {
+  border: 1px solid #d0d7de;
+  padding: 0.7rem 1rem;
+  text-align: center;
+}
+.results-table {
+  border: 1px solid #d0d7de;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #fff;
+}
+.results-table th {
+  background: #eaeef2;
+  color: #222;
+  font-weight: 600;
+}
+.results-table td {
+  color: #222;
+}
+.results-table tr:hover {
+  background: #e3f2fd;
+}
+.excel-row {
+  background: #23272f;
+  color: #f0f0f0;
+}
+.excel-row-even {
+  background: #23272f;
+}
+.excel-row-odd {
+  background: #181b20;
+}
+.excel-row td, .excel-row th {
+  border: 1px solid #353a45;
+  padding: 0.7rem 1rem;
+  text-align: center;
+}
+.results-table {
+  border: 1px solid #353a45;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #23272f;
+}
+.results-table th {
+  background: #23272f;
+  color: #f0f0f0;
+  font-weight: 600;
+}
+.results-table td {
+  color: #f0f0f0;
+}
+/* Remove hover effect */
+.results-table tr:hover {
+  background: inherit;
+}
+.winning-number {
+  background: #1976d2;
+  color: #fff;
+  box-shadow: none;
+}
+.no-result {
+  color: #888;
+}
+   
+
+.no-results {
+  text-align: center;
+  padding: 2rem;
+  color: #f0f0f0;
+  font-size: 1.1rem;
+  background-color: #1a1a1a;
+}
+
+.header-section {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.section-title {
+  color: #f0f0f0;
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+  display: inline-block;
+  font-weight: 600;
+}
+
+.section-title::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 3px;
+  background: #5d9c5d;
+}
+
+.current-result {
+  background: #2d2d2d;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  margin-bottom: 2rem;
+  max-width: 500px;
+  margin: 0 auto 2rem;
+  border: 1px solid #333333;
+}
+
+.current-label {
+  color: #5d9c5d;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.current-game-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  margin: 1rem 0;
+}
+
+.game-name {
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: #f0f0f0;
+}
+
+.jackpot-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #5d9c5d, #3a5a3a);
+  color: white;
+  border-radius: 50%;
+  font-size: 2rem;
+  font-weight: bold;
+  box-shadow: 0 4px 15px rgba(93, 156, 93, 0.3);
+}
+
+.current-date {
+  color: #f0f0f0;
+  font-size: 1rem;
+  font-weight: 500;
+  margin-top: 0.5rem;
+  opacity: 0.8;
+}
+
+.results-table-container {
+  background: #2d2d2d;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  border: 1px solid #333333;
+}
+
+.table-scroll-wrapper {
+  overflow-x: auto;
+}
+
+.results-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px;
+}
+
+.results-table th {
+  background: #3a5a3a;
+  color: #f0f0f0;
+  font-weight: 600;
+  padding: 1rem;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.results-table td {
+  padding: 1rem;
+  border-bottom: 1px solid #333333;
+  color: #f0f0f0;
+  text-align: center;
+  font-size: 0.95rem;
+}
+
+.results-table tr:last-child td {
+  border-bottom: none;
+}
+
+.results-table tr:hover {
+  background: #333333;
+}
+
+.latest-row {
+  background-color: #2a3a2a;
+}
+
+.latest-row td {
+  font-weight: 500;
+}
+
+.date-column {
+  font-weight: 500;
+  color: #f0f0f0;
+  white-space: nowrap;
+}
+
+.winning-number {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  background: #5d9c5d;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  box-shadow: 0 2px 5px rgba(93, 156, 93, 0.2);
+}
+
+.no-result {
+  color: #666666;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .view-result-container {
+    padding: 1rem;
+    padding-top: 80px;
+  }
+
+  .section-title {
+    font-size: 1.5rem;
+  }
+
+  .current-result {
+    padding: 1.2rem;
+  }
+
+  .jackpot-number {
+    width: 70px;
+    height: 70px;
+    font-size: 1.8rem;
+  }
+
+  .game-name {
+    font-size: 1.1rem;
+  }
+
+  .results-table th,
+  .results-table td {
+    padding: 0.8rem;
+  }
+
+  .winning-number {
+    width: 36px;
+    height: 36px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .section-title {
+    font-size: 1.3rem;
+  }
+  .view-result-container {
+    margin-top: 10px;
+  }
+
+  .current-result {
+    padding: 1rem;
+    max-width: 100%;
+  }
+
+  .current-game-display {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .jackpot-number {
+    width: 60px;
+    height: 60px;
+    font-size: 1.5rem;
+  }
+
+  .results-table th {
+    font-size: 0.8rem;
+    padding: 0.6rem;
+  }
+
+  .results-table td {
+    padding: 0.6rem;
+    font-size: 0.85rem;
+  }
+
+  .winning-number {
+    width: 32px;
+    height: 32px;
+  }
+}
