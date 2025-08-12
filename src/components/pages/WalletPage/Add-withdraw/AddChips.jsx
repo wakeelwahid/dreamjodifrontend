@@ -124,10 +124,9 @@ const AddChips = () => {
         <h3>📌 Deposit Information:</h3>
         <ul>
           <li>Minimum deposit: ₹100</li>
-          <li>Instant UPI deposits (Max ₹50,000)</li>
+          <li>Instant UPI deposits (Max ₹1,000)</li>
           <li>28% GST applicable on all deposits</li>
-          <li>5% cashback on deposits above ₹2000</li>
-          <li>Wallet balance updated after admin approval</li>
+          
         </ul>
       </div>
     </div>

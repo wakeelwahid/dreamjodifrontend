@@ -61,6 +61,14 @@ const UserDetails = () => {
         setWasReset(false);
       }
     } catch (err) {
+      if (err.response && err.response.status === 401) {
+        // Token expired or unauthorized, logout admin and redirect
+        localStorage.removeItem("adminToken");
+        localStorage.removeItem("adminRefreshToken");
+        localStorage.removeItem("adminUser");
+        window.location.href = "/admin";
+        return;
+      }
       setStatusMsg("Failed to load user data.");
     }
     setLoading(false);

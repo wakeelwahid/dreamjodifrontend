@@ -26,6 +26,7 @@ const ProfilePage = () => {
   };
 
   useEffect(() => {
+    let unauthorized = false;
     const fetchProfile = async () => {
       try {
         const token = localStorage.getItem("token");
@@ -41,10 +42,19 @@ const ProfilePage = () => {
         setUser(profileRes.data);
         setWallet(walletRes.data);
       } catch (err) {
-        console.error("Failed to load profile or balance", err);
+        if (err.response && err.response.status === 401) {
+          unauthorized = true;
+          localStorage.removeItem("token");
+          localStorage.removeItem("refreshToken");
+          localStorage.removeItem("user");
+          window.location.href = "/login";
+        } else {
+          console.error("Failed to load profile or balance", err);
+        }
       }
     };
     fetchProfile();
+    // No polling or repeated fetch on 401
   }, []);
 
   // Copy referral code handler

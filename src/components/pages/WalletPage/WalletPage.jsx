@@ -91,7 +91,7 @@ const WalletPage = () => {
           </Link>
 
           <Link to="/wconfirm" className="action-btn withdraw-btn">
-            <i className="fas fa-wallet"></i> RADEEM COINS
+            <i className="fas fa-wallet"></i> REDEEM COINS
           </Link>
         </div>
       </div>

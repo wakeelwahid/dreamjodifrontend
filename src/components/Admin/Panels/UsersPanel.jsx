@@ -261,7 +261,7 @@ const UsersPanel = () => {
                 <tr
                   key={user.id}
                   style={{ cursor: "pointer" }}
-                  onClick={() => navigate(`/admin/dashboard/user/${user.id}`)}
+                  onClick={() => navigate(`user/${user.id}`)}
                 >
                   <td>{user.id}</td>
                   <td className="username-cell">{user.username}</td>

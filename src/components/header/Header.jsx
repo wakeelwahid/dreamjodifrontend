@@ -56,6 +56,7 @@ const Header = () => {
   }, [location]);
 
   useEffect(() => {
+    let unauthorized = false;
     const fetchBalance = async () => {
       try {
         const token = localStorage.getItem("token");
@@ -68,7 +69,15 @@ const Header = () => {
           });
         }
       } catch (error) {
-        console.error("Error fetching balance:", error);
+        if (error.response && error.response.status === 401) {
+          unauthorized = true;
+          localStorage.removeItem("token");
+          localStorage.removeItem("refreshToken");
+          localStorage.removeItem("user");
+          window.location.href = "/login";
+        } else {
+          console.error("Error fetching balance:", error);
+        }
       }
     };
 
@@ -76,6 +85,7 @@ const Header = () => {
 
     // Listen to walletUpdate event for instant balance update (cross-tab)
     const onStorage = (e) => {
+      if (unauthorized) return;
       if (e.key === "walletUpdate") {
         fetchBalance();
       }
@@ -84,6 +94,7 @@ const Header = () => {
 
     // Listen to custom event for same-tab instant update
     const onWalletUpdate = () => {
+      if (unauthorized) return;
       fetchBalance();
     };
     window.addEventListener("walletUpdateEvent", onWalletUpdate);
