@@ -1,3 +1,17 @@
+// Helper to parse 'DD-MM-YYYY HH:mm:ss' to Date object
+function parseDateTime(str) {
+  if (!str) return null;
+  // Try ISO parse first
+  let d = new Date(str);
+  if (!isNaN(d)) return d;
+  // Try DD-MM-YYYY HH:mm:ss
+  const match = str.match(/(\d{2})-(\d{2})-(\d{4})[ T](\d{2}):(\d{2}):(\d{2})/);
+  if (match) {
+    const [_, day, month, year, hour, min, sec] = match;
+    return new Date(`${year}-${month}-${day}T${hour}:${min}:${sec}`);
+  }
+  return null;
+}
 import React, { useState, useEffect } from "react";
 import adminAxios from "../../utils/adminAxios";
 import "./panels.css";
@@ -24,7 +38,6 @@ const WithdrawRequestPanel = () => {
       );
       setWithdrawals(pendingWithdrawals);
     } catch (error) {
-      console.error("Failed to fetch withdrawals:", error);
     } finally {
       setLoading(false);
     }
@@ -49,7 +62,6 @@ const WithdrawRequestPanel = () => {
         text: `Withdrawal request ${actionType}d successfully!`,
       });
     } catch (error) {
-      console.error(`Failed to ${actionType} withdrawal:`, error);
       setMessage({
         type: "reject",
         text: `Error: ${error.response?.data?.error || "Something went wrong"}`,
@@ -64,13 +76,28 @@ const WithdrawRequestPanel = () => {
   };
 
   const filteredWithdrawals = withdrawals.filter((withdrawal) => {
+    const parsedDate = parseDateTime(withdrawal.created_at);
     const searchTermLower = searchTerm.toLowerCase();
     const userInfo = `${withdrawal.user?.username || ""} ${
       withdrawal.user?.mobile || ""
     }`.toLowerCase();
-    const date = new Date(withdrawal.created_at).toLocaleDateString();
-    const time = new Date(withdrawal.created_at).toLocaleTimeString();
-
+    const date = parsedDate
+      ? parsedDate.toLocaleDateString("en-IN", {
+          timeZone: "Asia/Kolkata",
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+        })
+      : "-";
+    const time = parsedDate
+      ? parsedDate.toLocaleTimeString("en-IN", {
+          timeZone: "Asia/Kolkata",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: true,
+        })
+      : "-";
     return (
       userInfo.includes(searchTermLower) ||
       withdrawal.amount.toString().includes(searchTerm) ||
@@ -168,8 +195,8 @@ const WithdrawRequestPanel = () => {
                 <th>ID</th>
                 <th>User Details</th>
                 <th>Amount</th>
+                <th>UPI ID</th>
                 <th>Date & Time</th>
-
                 <th>Actions</th>
               </tr>
             </thead>
@@ -187,18 +214,41 @@ const WithdrawRequestPanel = () => {
                       </div>
                     </td>
                     <td className="amount-cell">₹{withdrawal.amount}</td>
+                    <td className="upi-cell">{withdrawal.upi_id || "-"}</td>
                     <td className="date-cell">
                       <div className="datetime">
                         <span className="date">
-                          {new Date(withdrawal.created_at).toLocaleDateString()}
+                          {(() => {
+                            const parsedDate = parseDateTime(
+                              withdrawal.created_at
+                            );
+                            return parsedDate
+                              ? parsedDate.toLocaleDateString("en-IN", {
+                                  timeZone: "Asia/Kolkata",
+                                  day: "2-digit",
+                                  month: "2-digit",
+                                  year: "numeric",
+                                })
+                              : "-";
+                          })()}
                         </span>
                         <span className="time">
-                          {new Date(withdrawal.created_at).toLocaleTimeString()}
+                          {(() => {
+                            const parsedDate = parseDateTime(
+                              withdrawal.created_at
+                            );
+                            return parsedDate
+                              ? parsedDate.toLocaleTimeString("en-IN", {
+                                  timeZone: "Asia/Kolkata",
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                  second: "2-digit",
+                                  hour12: true,
+                                })
+                              : "-";
+                          })()}
                         </span>
                       </div>
-                    </td>
-                    <td>
-                      <span className="status-badge pending">PENDING</span>
                     </td>
                     <td>
                       <div className="action-buttons">
@@ -267,7 +317,38 @@ const WithdrawRequestPanel = () => {
                 <div className="detail-row">
                   <span>Date:</span>
                   <strong>
-                    {new Date(selectedWithdraw.created_at).toLocaleString()}
+                    {(() => {
+                      const parsedDate = parseDateTime(
+                        selectedWithdraw.created_at
+                      );
+                      return parsedDate
+                        ? parsedDate.toLocaleDateString("en-IN", {
+                            timeZone: "Asia/Kolkata",
+                            day: "2-digit",
+                            month: "2-digit",
+                            year: "numeric",
+                          })
+                        : "-";
+                    })()}
+                  </strong>
+                </div>
+                <div className="detail-row">
+                  <span>Time:</span>
+                  <strong>
+                    {(() => {
+                      const parsedDate = parseDateTime(
+                        selectedWithdraw.created_at
+                      );
+                      return parsedDate
+                        ? parsedDate.toLocaleTimeString("en-IN", {
+                            timeZone: "Asia/Kolkata",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            second: "2-digit",
+                            hour12: true,
+                          })
+                        : "-";
+                    })()}
                   </strong>
                 </div>
               </div>

@@ -23,7 +23,6 @@ const DepositRequestPanel = () => {
       );
       setDeposits(pendingDeposits);
     } catch (error) {
-      console.error("Failed to fetch deposits:", error);
     } finally {
       setLoading(false);
     }
@@ -48,7 +47,6 @@ const DepositRequestPanel = () => {
         text: `Deposit request ${actionType}d successfully!`,
       });
     } catch (error) {
-      console.error(`Failed to ${actionType} deposit:`, error);
       setMessage({
         type: "error",
         text: `Error: ${error.response?.data?.error || "Something went wrong"}`,
@@ -69,6 +67,7 @@ const DepositRequestPanel = () => {
       deposit.amount,
       deposit.created_at,
       deposit.utr_number,
+      deposit.upi_id,
       deposit.status,
     ]
       .join(" ")
@@ -172,6 +171,7 @@ const DepositRequestPanel = () => {
                 <th>User Details</th>
                 <th>Amount</th>
                 <th>UTR Number</th>
+                <th>Upi Id</th>
                 <th>Date & Time</th>
 
                 <th>Actions</th>
@@ -192,13 +192,31 @@ const DepositRequestPanel = () => {
                     </td>
                     <td className="amount-cell">₹{deposit.amount}</td>
                     <td className="utr-cell">{deposit.utr_number}</td>
+                    <td className="utr-cell">{deposit.upi_id}</td>
                     <td className="date-cell">
                       <div className="datetime">
                         <span className="date">
-                          {new Date(deposit.created_at).toLocaleDateString()}
+                          {new Date(deposit.created_at).toLocaleString(
+                            "en-IN",
+                            {
+                              timeZone: "Asia/Kolkata",
+                              day: "2-digit",
+                              month: "2-digit",
+                              year: "numeric",
+                            }
+                          )}
                         </span>
                         <span className="time">
-                          {new Date(deposit.created_at).toLocaleTimeString()}
+                          {new Date(deposit.created_at).toLocaleString(
+                            "en-IN",
+                            {
+                              timeZone: "Asia/Kolkata",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                              second: "2-digit",
+                              hour12: true,
+                            }
+                          )}
                         </span>
                       </div>
                     </td>
@@ -274,9 +292,16 @@ const DepositRequestPanel = () => {
                   <strong>{selectedDeposit.utr_number}</strong>
                 </div>
                 <div className="detail-row">
+                  <span>UPI ID:</span>
+                  <strong>{selectedDeposit.upi_id}</strong>
+                </div>
+                <div className="detail-row">
                   <span>Date:</span>
                   <strong>
-                    {new Date(selectedDeposit.created_at).toLocaleString()}
+                    {new Date(selectedDeposit.created_at).toLocaleString(
+                      "en-IN",
+                      { timeZone: "Asia/Kolkata" }
+                    )}
                   </strong>
                 </div>
               </div>

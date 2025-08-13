@@ -226,6 +226,7 @@
 @media (max-width: 768px) {
   .withdraw-container {
     padding: 15px;
+    margin-top: 60px;
   }
   
   .withdraw-title {

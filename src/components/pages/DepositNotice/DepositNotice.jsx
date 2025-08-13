@@ -25,22 +25,12 @@ const DepositNotice = () => {
             <br />
             <span className="dn-hindi">निकासी उसी यूपीआई पर होगी जिससे जमा किया (कोई बदलाव नहीं)</span>
           </li>
-          <li className="dn-list-item">
-            <span className="dn-list-icon">→</span>
-            Use only your own registered account
-            <br />
-            <span className="dn-hindi">केवल अपने पंजीकृत खाते का उपयोग करें</span>
-          </li>
+        
          
         </ul>
       </div>
 
-      <div className="dn-info-box">
-        <p className="dn-info-text">
-          <strong>Note:</strong> For security reasons, we strictly enforce same-account withdrawals.
-          
-        </p>
-      </div>
+      
 
       <div className="dn-button-group">
         <Link to="/wallet" className="dn-button dn-button-cancel">

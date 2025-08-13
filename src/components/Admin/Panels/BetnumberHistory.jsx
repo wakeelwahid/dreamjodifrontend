@@ -30,7 +30,7 @@ const BetnumberHistory = () => {
 
         setHistory(uniqueHistory);
       } catch (err) {
-        console.error("Error fetching history:", err);
+        
         setHistory([]);
       }
       setLoading(false);

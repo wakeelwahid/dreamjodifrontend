@@ -355,6 +355,7 @@ const UserDetails = () => {
                 <th>Amount</th>
                 <th>Status</th>
                 <th>UTR/Txn ID</th>
+                <th>UPI</th>
               </tr>
             </thead>
             <tbody>
@@ -367,7 +368,7 @@ const UserDetails = () => {
                         color: "#fff",
                       }}
                     >
-                      <td colSpan={4} style={{ fontWeight: 600 }}>
+                      <td colSpan={5} style={{ fontWeight: 600 }}>
                         {date}
                       </td>
                     </tr>
@@ -383,6 +384,7 @@ const UserDetails = () => {
                           </span>
                         </td>
                         <td className="st-utr">{dep.utr}</td>
+                        <td className="st-utr">{dep.upi || "-"}</td>
                       </tr>
                     ))}
                   </React.Fragment>
@@ -411,7 +413,8 @@ const UserDetails = () => {
                 <th>Date/Time</th>
                 <th>Amount</th>
                 <th>Status</th>
-                <th>UPI/ACCOUNT</th>
+                <th>UTR</th>
+                <th>UPI</th>
               </tr>
             </thead>
             <tbody>
@@ -424,24 +427,44 @@ const UserDetails = () => {
                         color: "#fff",
                       }}
                     >
-                      <td colSpan={4} style={{ fontWeight: 600 }}>
+                      <td colSpan={5} style={{ fontWeight: 600 }}>
                         {date}
                       </td>
                     </tr>
-                    {items.map((w) => (
-                      <tr key={w.id}>
-                        <td>{formatDate(w.created_at)}</td>
-                        <td className="st-amount">₹{w.amount}</td>
-                        <td>
-                          <span
-                            className={`st-status-badge st-${w.status.toLowerCase()}`}
-                          >
-                            {w.status}
-                          </span>
-                        </td>
-                        <td className="st-utr">{w.utr}</td>
-                      </tr>
-                    ))}
+                    {items.map((w) => {
+                      // Try to get UPI from all possible fields or extract from note
+                      let upi =
+                        w.upi_id ||
+                        w.upi ||
+                        w.user_upi ||
+                        w.upiId ||
+                        w.upiid ||
+                        w.upiID;
+                      if (!upi && w.note && typeof w.note === "string") {
+                        // Try to extract from note, e.g. 'Withdraw request - UPI: xyz@ybl'
+                        const match = w.note.match(/UPI[:：]?\s*([\w@.\-]+)/i);
+                        if (match) upi = match[1];
+                      }
+                      // Debug: log if UPI is still missing
+                      // if (!upi) console.log('No UPI found for withdrawal', w);
+                      return (
+                        <tr key={w.id}>
+                          <td>{formatDate(w.created_at)}</td>
+                          <td className="st-amount">₹{w.amount}</td>
+                          <td>
+                            <span
+                              className={`st-status-badge st-${w.status.toLowerCase()}`}
+                            >
+                              {w.status}
+                            </span>
+                          </td>
+                          <td className="st-utr">{w.utr}</td>
+                          <td className="st-utr">
+                            {upi || (w.user_upi ? w.user_upi : "-")}
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </React.Fragment>
                 )
               )}

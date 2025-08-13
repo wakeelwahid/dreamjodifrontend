@@ -10,30 +10,44 @@ const PaymentPage = () => {
   const { amount, paymentMethod } = location.state || {};
 
   const [utr, setUtr] = useState("");
-  const [error, setError] = useState("");
+  const [upi, setUpi] = useState("");
+  const [utrError, setUtrError] = useState("");
+  const [upiError, setUpiError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [qrImage, setQrImage] = useState(null); // QR image state
+  const [qrImages, setQrImages] = useState([]); // All QR images for amount
+  const [qrImage, setQrImage] = useState(null); // Selected QR image
   const [timer, setTimer] = useState(300); // 5 minutes in seconds
   const timerRef = useRef();
 
   // 🔁 Fetch QR code on mount
-  useEffect(() => {
-    const fetchQRImage = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const response = await API.get("/get-photos/");
-        if (response.data.length > 0) {
-          // Pick a random image from the list
-          const randomIdx = Math.floor(Math.random() * response.data.length);
-          setQrImage(response.data[randomIdx].image);
-        }
-      } catch (err) {
-        console.error("Failed to fetch QR image:", err);
-      }
-    };
+  // Helper to pick a random image from array
+  const pickRandomQR = (arr) => {
+    if (!arr || arr.length === 0) return null;
+    const idx = Math.floor(Math.random() * arr.length);
+    return arr[idx].image;
+  };
 
-    fetchQRImage();
-  }, []);
+  // Fetch all QR images for the amount on mount
+  useEffect(() => {
+    const fetchQRImages = async () => {
+      try {
+        const response = await API.get(`/get-photos/?amount=${amount}`);
+        if (response.data.length > 0) {
+          setQrImages(response.data);
+          setQrImage(pickRandomQR(response.data));
+        }
+      } catch (err) {}
+    };
+    fetchQRImages();
+  }, [amount]);
+
+  // On timer reset or page refresh, pick a new random QR
+  useEffect(() => {
+    if (timer === 300 && qrImages.length > 0) {
+      setQrImage(pickRandomQR(qrImages));
+    }
+    // eslint-disable-next-line
+  }, [timer]);
 
   // Timer countdown and redirect after 5 minutes
   useEffect(() => {
@@ -41,6 +55,8 @@ const PaymentPage = () => {
       setTimer((prev) => {
         if (prev <= 1) {
           clearInterval(timerRef.current);
+          // On timeout, pick a new random QR for next visit
+          setQrImage(pickRandomQR(qrImages));
           navigate("/addchips");
           return 0;
         }
@@ -48,39 +64,46 @@ const PaymentPage = () => {
       });
     }, 1000);
     return () => clearInterval(timerRef.current);
-  }, [navigate]);
+  }, [navigate, qrImages]);
 
   const handleConfirmPayment = async () => {
+    let valid = true;
     if (!/^[0-9]{12}$/.test(utr)) {
-      setError("⚠️ Please enter a valid 12-digit UTR number.");
-      return;
+      setUtrError("⚠️ Please enter a valid 12-digit UTR number.");
+      valid = false;
+    } else {
+      setUtrError("");
     }
+    if (!upi || !/^[\w.-]+@[\w.-]+$/.test(upi)) {
+      setUpiError("⚠️ Please enter a valid UPI ID (e.g. example@upi)");
+      valid = false;
+    } else {
+      setUpiError("");
+    }
+    if (!valid) return;
 
-    setError("");
     setLoading(true);
-
     try {
       const token = localStorage.getItem("token");
-
       const response = await API.post("/coin-requests/", {
         amount: amount,
         utr_number: utr,
         payment_method: paymentMethod,
+        upi_id: upi,
       });
-
       navigate("/addchipssuccess", {
         state: {
           amount: amount,
           transactionId: response.data.request_id,
+          upi_id: upi,
         },
       });
     } catch (error) {
-      console.error("Deposit request failed:", error);
       const errorMsg =
         error.response?.data?.error ||
         error.response?.data?.details ||
         "Failed to submit deposit request. Please try again.";
-      setError(errorMsg);
+      setUtrError(errorMsg); // Show error under UTR field
     } finally {
       setLoading(false);
     }
@@ -140,14 +163,6 @@ const PaymentPage = () => {
 
         <div className="payment-form">
           <div className="form-group">
-            <label className="form-label">
-              UTR Number
-              <span className="info-tooltip">
-                <span className="tooltip-text">
-                  Unique Transaction Reference number provided by your bank
-                </span>
-              </span>
-            </label>
             <input
               type="text"
               className="form-input"
@@ -155,15 +170,32 @@ const PaymentPage = () => {
               value={utr}
               onChange={(e) => {
                 setUtr(e.target.value);
-                setError("");
+                setUtrError("");
               }}
               pattern="[0-9]{12}"
               maxLength="12"
               required
             />
-            {error && <p className="utr-error">{error}</p>}
+            {utrError && <p className="utr-error">{utrError}</p>}
           </div>
-
+          <div className="form-group">
+            <input
+              type="text"
+              className="form-input"
+              placeholder="Enter UPI ID"
+              value={upi}
+              onChange={(e) => {
+                setUpi(e.target.value);
+                setUpiError("");
+              }}
+              required
+            />
+            <p style={{ marginTop: "5px" }}>
+              <span style={{ color: "red" }}>नोट:</span> जिस UPI से जमा करोगे,
+              उसी UPI मे विड्रॉ (withdraw) आएगा।
+            </p>
+            {upiError && <p className="utr-error">{upiError}</p>}
+          </div>
           <button
             className="submit-btn"
             type="button"
@@ -172,17 +204,6 @@ const PaymentPage = () => {
           >
             {loading ? "Submitting..." : "CONFIRM PAYMENT"}
           </button>
-        </div>
-
-        <div className="find-utr-section">
-          <h4>How to Find Your UTR Number:</h4>
-          <ul>
-            <li>Check your bank SMS for the transaction confirmation</li>
-            <li>Look for a 12-digit number labeled "UTR" or "Ref No"</li>
-            <li>In PhonePe: Transactions → Select payment → View details</li>
-            <li>In Google Pay: Open receipt → Check "Transaction ID"</li>
-            <li>In Paytm: Passbook → Select transaction → View UTR</li>
-          </ul>
         </div>
       </div>
 

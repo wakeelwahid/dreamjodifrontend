@@ -31,7 +31,7 @@ const ProfilePage = () => {
       try {
         const token = localStorage.getItem("token");
         if (!token) {
-          console.error("No token found");
+          
           return;
         }
         const headers = { Authorization: `Bearer ${token}` };
@@ -49,7 +49,7 @@ const ProfilePage = () => {
           localStorage.removeItem("user");
           window.location.href = "/login";
         } else {
-          console.error("Failed to load profile or balance", err);
+          
         }
       }
     };

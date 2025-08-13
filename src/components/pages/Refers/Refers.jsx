@@ -14,7 +14,7 @@ const Refers = () => {
         const token = localStorage.getItem("token");
 
         if (!token) {
-          console.error("No token found");
+          
           setLoading(false);
           return;
         }
@@ -27,7 +27,7 @@ const Refers = () => {
         setReferralData(referralRes.data);
         setWallet(walletRes.data);
       } catch (error) {
-        console.error("Error fetching referral/wallet data:", error);
+       
         setReferralData({
           referral_code: "N/A",
           total_referrals: 0,

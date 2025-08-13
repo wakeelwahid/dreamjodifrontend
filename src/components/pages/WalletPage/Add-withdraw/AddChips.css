@@ -7,6 +7,7 @@
   overflow: hidden;
   min-height: 100vh;
   padding-top: 110px;
+  margin-bottom: -150px;
 }
 
 /* Header Styles */
@@ -229,6 +230,7 @@
 @media (max-width: 768px) {
   .deposit-container {
     padding: 15px;
+    margin-top: 60px;
   }
   
   .deposit-title {
@@ -244,7 +246,10 @@
   .deposit-title {
     font-size: 1.7rem;
   }
-  
+  .deposit-container {
+   
+    margin-top: 60px;
+  }
   .card-title {
     font-size: 1.3rem;
   }

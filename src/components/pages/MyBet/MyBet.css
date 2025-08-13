@@ -150,8 +150,8 @@ h1 {
 }
 
 .bet-status-pending {
-  background: rgba(255, 165, 0, 0.2);
-  color: orange;
+  background: rgba(49, 171, 47, 0.2);
+  color: rgb(241, 244, 240);
 }
 
 .bet-status-won {

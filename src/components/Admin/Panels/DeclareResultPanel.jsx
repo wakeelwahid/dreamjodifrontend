@@ -7,12 +7,12 @@ const DeclareResultPanel = () => {
   const [message, setMessage] = useState("");
 
   const games = [
-    { name: "disawer", label: "DISAWER" },
-    { name: "gali", label: "GALI" },
     { name: "faridabad", label: "FARIDABAD" },
-    { name: "ghaziabad", label: "GHAZIABAD" },
     { name: "jaipur king", label: "JAIPUR KING" },
+    { name: "ghaziabad", label: "GHAZIABAD" },
     { name: "diamond king", label: "DIAMOND KING" },
+    { name: "gali", label: "GALI" },
+    { name: "disawer", label: "DISAWER" },
   ];
 
   const declareResult = async () => {
@@ -26,7 +26,7 @@ const DeclareResultPanel = () => {
       setSelectedGame("");
     } catch (error) {
       setMessage("Failed to declare result");
-      console.error(error);
+      
     }
   };
 
@@ -39,7 +39,7 @@ const DeclareResultPanel = () => {
       setMessage(response.data.message || "Undo successful");
     } catch (error) {
       setMessage("Failed to undo result");
-      console.error(error);
+      
     }
   };
 

@@ -70,7 +70,7 @@ const TopSection = () => {
             </div>
           </motion.div>
 
-          <motion.div
+          {/* <motion.div
             className="info-box"
             initial={{ y: 50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -98,7 +98,7 @@ const TopSection = () => {
               <br />
               सुरक्षित और विश्वसनीय
             </div>
-          </motion.div>
+          </motion.div> */}
         </div>
 
         {/* Action Buttons */}

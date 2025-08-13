@@ -44,12 +44,12 @@ adminAxios.interceptors.response.use(
           // Refresh token expired or invalid, force logout
           localStorage.removeItem("adminToken");
           localStorage.removeItem("adminRefreshToken");
-          window.location.href = "/admin-login"; // Change as per your route
+          window.location.href = "/aarizmaan"; // Change as per your route
         }
       } else {
         // No refresh token, force logout
         localStorage.removeItem("adminToken");
-        window.location.href = "/admin-login";
+        window.location.href = "/aarizmaan"; // Change as per your route
       }
     }
     return Promise.reject(error);

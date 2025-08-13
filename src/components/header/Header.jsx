@@ -76,7 +76,7 @@ const Header = () => {
           localStorage.removeItem("user");
           window.location.href = "/login";
         } else {
-          console.error("Error fetching balance:", error);
+          
         }
       }
     };
@@ -125,7 +125,7 @@ const Header = () => {
     { name: "Terms & Conditions", icon: "file-contract", path: "/terms" },
     { name: "Refund Policy", icon: "undo", path: "/refund" },
     { name: "Privacy Policy", icon: "user-shield", path: "/privacy" },
-    { name: "Support", icon: "headset", path: "/support" },
+    { name: "Help", icon: "headset", path: "/support" },
   ];
 
   return (

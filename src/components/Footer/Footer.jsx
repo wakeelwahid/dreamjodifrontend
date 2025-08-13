@@ -7,11 +7,7 @@ const Footer = () => {
     <footer className="satta-footer">
       <hr />
       {/* Flower Bubble Animation */}
-      <div className="flower-bubbles">
-        {[...Array(5)].map((_, i) => (
-          <div key={i} className="bubble" />
-        ))}
-      </div>
+     
 
       {/* Copyright & Disclaimer */}
       <div className="footer-bottom">

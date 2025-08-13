@@ -4,9 +4,11 @@ import "./panels.css";
 
 const UploadPhoto = () => {
   const [photos, setPhotos] = useState([]);
+  const [photoName, setPhotoName] = useState("");
   const [currentPhoto, setCurrentPhoto] = useState(null);
   const [editMode, setEditMode] = useState(false);
   const [previewUrl, setPreviewUrl] = useState("");
+  const [popupMessage, setPopupMessage] = useState("");
   const fileInputRef = useRef(null);
 
   // Fetch photos from the backend when the component mounts
@@ -19,10 +21,11 @@ const UploadPhoto = () => {
           id: photo.id,
           url: photo.image || photo.url, // handle both possible keys
           title: photo.title || "",
+          name: photo.name || "",
         }));
         setPhotos(normalizedPhotos);
       } catch (err) {
-        alert("Failed to fetch photos.");
+        setPopupMessage("Failed to fetch photos.");
       }
     };
     fetchPhotos();
@@ -55,6 +58,7 @@ const UploadPhoto = () => {
     const formData = new FormData();
     formData.append("photo", currentPhoto.file); // Make sure "photo" matches the backend field name
     formData.append("title", currentPhoto.title);
+    formData.append("name", photoName);
 
     try {
       const response = await adminAxios.post("/admin/upload-photo/", formData, {
@@ -69,16 +73,18 @@ const UploadPhoto = () => {
           id: data.id,
           url: data.image,
           title: data.title,
+          name: data.name,
         },
       ]);
       setCurrentPhoto(null);
       setPreviewUrl("");
       setEditMode(false);
+      setPhotoName("");
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }
     } catch (err) {
-      alert("Upload failed");
+      setPopupMessage("Upload failed");
     }
   };
 
@@ -98,7 +104,7 @@ const UploadPhoto = () => {
         setEditMode(false);
       }
     } catch (err) {
-      alert("Failed to delete photo.");
+      setPopupMessage("Failed to delete photo.");
     }
   };
 
@@ -121,8 +127,35 @@ const UploadPhoto = () => {
     }));
   };
 
+  // Auto-hide popup after 3 seconds
+  useEffect(() => {
+    if (popupMessage) {
+      const timer = setTimeout(() => setPopupMessage(""), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [popupMessage]);
+
   return (
     <div className="upload-container">
+      {/* Popup message */}
+      {popupMessage && (
+        <div
+          className="popup-message"
+          style={{
+            background: "#ffefc1",
+            color: "#a15c00",
+            padding: "10px 20px",
+            borderRadius: "8px",
+            marginBottom: "16px",
+            textAlign: "center",
+            fontWeight: 600,
+            boxShadow: "0 2px 8px #0001",
+            zIndex: 10,
+          }}
+        >
+          {popupMessage}
+        </div>
+      )}
       <form onSubmit={handleSubmit} className="upload-form">
         <div className="upload-form-group">
           <label htmlFor="photo-upload" className="upload-label">
@@ -163,6 +196,21 @@ const UploadPhoto = () => {
           />
         </div>
 
+        <div className="upload-form-group">
+          <label htmlFor="photo-name" className="upload-label">
+            Name
+          </label>
+          <input
+            id="photo-name"
+            type="text"
+            name="name"
+            value={photoName}
+            onChange={(e) => setPhotoName(e.target.value)}
+            className="upload-input"
+            required
+          />
+        </div>
+
         <button type="submit" className="upload-button upload-button-primary">
           {editMode ? "Update Photo" : "Upload Photo"}
         </button>
@@ -196,6 +244,7 @@ const UploadPhoto = () => {
                   <th style={{ width: "50px" }}>Sr. No.</th>
                   <th style={{ width: "120px" }}>Image</th>
                   <th>Title</th>
+                  <th>Name</th>
                   <th style={{ width: "120px" }}>Actions</th>
                 </tr>
               </thead>
@@ -218,6 +267,9 @@ const UploadPhoto = () => {
                       />
                     </td>
                     <td className="upload-photo-title-table">{photo.title}</td>
+                    <td className="upload-photo-name-table">
+                      {photo.name || "-"}
+                    </td>
                     <td>
                       <button
                         onClick={() => handleDelete(photo.id)}

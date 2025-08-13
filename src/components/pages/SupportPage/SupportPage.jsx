@@ -6,9 +6,10 @@ const SupportPage = () => {
   return (
     <div className="support-page">
       <div className="support-options">
+        {/* WhatsApp Support Card */}
         {/* <div className="support-card">
           <div className="support-icon whatsapp-icon">
-            <FaWhatsapp />
+            <FaWhatsapp size={40} />
           </div>
           <h2 className="support-card-title">WhatsApp Support</h2>
           <p className="support-card-desc">
@@ -16,18 +17,19 @@ const SupportPage = () => {
             24 hours a day.
           </p>
           <a
-            href="https://wa.me/919876543210"
+            href="https://wa.me/7027019186"
             className="contact-btn whatsapp-btn"
             target="_blank"
             rel="noopener noreferrer"
           >
-            <FaWhatsapp /> Chat on WhatsApp
+            <FaWhatsapp style={{ marginRight: "8px" }} /> Chat on WhatsApp
           </a>
         </div> */}
 
+        {/* Telegram Support Card */}
         <div className="support-card">
           <div className="support-icon telegram-icon">
-            <FaTelegram />
+            <FaTelegram size={40} />
           </div>
           <h2 className="support-card-title">Telegram Support</h2>
           <p className="support-card-desc">
@@ -35,12 +37,12 @@ const SupportPage = () => {
             to help.
           </p>
           <a
-            href="https://t.me/HelpDream Jodi" // Change to your personal Telegram username
+            href="https://t.me/Helpdreamjodii" // Change this to your Telegram username
             className="contact-btn telegram-btn"
             target="_blank"
             rel="noopener noreferrer"
           >
-            <FaTelegram /> Message on Telegram
+            <FaTelegram style={{ marginRight: "8px" }} /> Message on Telegram
           </a>
         </div>
       </div>

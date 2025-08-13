@@ -500,7 +500,8 @@
 .chart-box {
   background: rgba(20, 30, 45, 0.95);
   border-radius: 10px;
-  padding: 20px;
+  /* padding-bottom: 60px; */
+  padding: 10px 10px 60px 10px;
   height: 400px;
   width: 100%;
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -556,6 +557,7 @@
   padding: 5px 10px;
   border-radius: 4px;
   cursor: pointer;
+  
 }
 
 :root[data-theme="light"] .earnings-filter {

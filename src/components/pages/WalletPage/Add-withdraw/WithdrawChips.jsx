@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./WithdrawChips.css";
 import { useNavigate } from "react-router-dom";
 import API from "../../../../api/axiosSetup";
@@ -8,6 +8,21 @@ const WithdrawChips = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const navigate = useNavigate();
+  const [upi, setUpi] = useState("");
+  const [lastDepositUpi, setLastDepositUpi] = useState("");
+
+  useEffect(() => {
+    // Fetch last deposit UPI from backend
+    const fetchLastDeposit = async () => {
+      try {
+        const res = await API.get("/user-upimatch/");
+        setLastDepositUpi(res.data.upi_id || "");
+      } catch (e) {
+        setLastDepositUpi("");
+      }
+    };
+    fetchLastDeposit();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,14 +44,28 @@ const WithdrawChips = () => {
       );
       return;
     }
+    if (!upi.trim()) {
+      setError("Please enter your UPI ID.");
+      return;
+    }
+    if (upi.trim() !== lastDepositUpi.trim()) {
+      setError(
+        "UPI MisMatch"
+      );
+      return;
+    }
 
     try {
-      const res = await API.post("/withdraw/", { amount: parseFloat(amount) });
+      const res = await API.post("/withdraw/", {
+        amount: parseFloat(amount),
+        upi_id: upi.trim(),
+      });
 
       setSuccess(
         res.data.message || "Withdraw request submitted successfully!"
       );
       setAmount("");
+      setUpi("");
       navigate("/withdrawalchipssuccess", { state: { amount } });
     } catch (err) {
       setError(
@@ -48,10 +77,9 @@ const WithdrawChips = () => {
   return (
     <div className="withdraw-container">
       <div className="withdraw-card">
-        <h2 className="card-title">Radeem Coins</h2>
+        <h2 className="card-title">Redeem Coins</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            {/* <label className="form-label">Amount (₹)</label> */}
             <input
               type="number"
               className="form-input"
@@ -75,8 +103,16 @@ const WithdrawChips = () => {
               </button>
             ))}
           </div>
-
-          {error && (
+          <div className="form-group">
+            <input
+              type="text"
+              className="form-input"
+              placeholder="Enter UPI ID"
+              value={upi}
+              onChange={(e) => setUpi(e.target.value)}
+              required
+            />
+            {error && (
             <div
               className="form-error"
               style={{ color: "red", marginBottom: 8 }}
@@ -84,6 +120,12 @@ const WithdrawChips = () => {
               {error}
             </div>
           )}
+            <p style={{ marginTop: "5px" }}>
+              <span style={{ color: "red" }}>नोट: </span> 
+              आपने जिस UPI ID से आखिरी बार जमा किया था, उसी UPI मे विड्रॉ (withdraw) होगा।
+            </p>
+          </div>
+          
           {success && (
             <div
               className="form-success"
@@ -92,7 +134,6 @@ const WithdrawChips = () => {
               {success}
             </div>
           )}
-
           <button type="submit" className="submit-btn">
             REQUEST COINS
           </button>
@@ -102,10 +143,7 @@ const WithdrawChips = () => {
       <div className="withdrawal-info">
         <h3>ℹ️ Withdrawal Information:</h3>
         <ul>
-          <li>Minimum withdrawal: ₹100</li>
-          <li>Maximum per request: ₹30,000</li>
           <li>Processing time: 5 to 10 minutes</li>
-          <li>Daily limit: ₹50,000</li>
           <li>Bank charges may apply</li>
         </ul>
       </div>

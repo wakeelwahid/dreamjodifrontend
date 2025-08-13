@@ -157,7 +157,7 @@ const AdminDashboard = () => {
             className={`nav-item ${activePanel === "deposits" ? "active" : ""}`}
             onClick={() => setActivePanel("deposits")}
           >
-            <FontAwesomeIcon icon={faArrowUp} /> Add Coins Requests
+            <FontAwesomeIcon icon={faArrowUp} /> Deposit Coins
           </button>
           <button
             className={`nav-item ${
@@ -165,7 +165,7 @@ const AdminDashboard = () => {
             }`}
             onClick={() => setActivePanel("withdrawals")}
           >
-            <FontAwesomeIcon icon={faArrowDown} /> Redeem Requests
+            <FontAwesomeIcon icon={faArrowDown} /> Withdraw Coins
           </button>
           <button
             className={`nav-item ${

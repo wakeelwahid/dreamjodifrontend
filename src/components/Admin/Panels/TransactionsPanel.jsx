@@ -12,18 +12,39 @@ const TransactionsPanel = () => {
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        const res = await adminAxios.get("/admin/transactions/");
+        const res = await adminAxios.get("admin/transactions/");
         // Transform the API data to match your existing UI structure
-        const formattedData = res.data.map((tx) => ({
-          id: tx.id,
-          user: tx.user?.username || "N/A",
-          mobile: tx.user?.mobile || "N/A",
-          type: tx.transaction_type,
-          amount: `₹${tx.amount}`,
-          status: tx.status,
-          date: new Date(tx.created_at).toLocaleString(),
-          note: tx.note || "N/A",
-        }));
+        const formattedData = res.data.map((tx) => {
+          // Show UPI for deposit or withdraw if available
+          let upi = "";
+          if (
+            tx.transaction_type === "deposit" &&
+            tx.related_deposit &&
+            tx.related_deposit.upi_id
+          ) {
+            upi = tx.related_deposit.upi_id;
+          } else if (
+            tx.transaction_type === "withdraw" &&
+            tx.related_withdrawal &&
+            tx.related_withdrawal.upi_id
+          ) {
+            upi = tx.related_withdrawal.upi_id;
+          }
+          let note = tx.note || "N/A";
+          if (upi) {
+            note += `\nUPI: ${upi}`;
+          }
+          return {
+            id: tx.id,
+            user: tx.user?.username || "N/A",
+            mobile: tx.user?.mobile || "N/A",
+            type: tx.transaction_type,
+            amount: `₹${tx.amount}`,
+            status: tx.status,
+            date: new Date(tx.created_at).toLocaleString(),
+            note: note,
+          };
+        });
         setTransactions(formattedData);
       } catch (error) {
         console.error("Error fetching transactions:", error);
@@ -121,7 +142,6 @@ const TransactionsPanel = () => {
             <option value="withdraw">Withdrawals</option>
           </select>
         </div>
-
         <div className="search-bar">
           <input
             type="text"
@@ -150,7 +170,7 @@ const TransactionsPanel = () => {
                   <th>Amount</th>
                   <th>Status</th>
                   <th>Date</th>
-                  <th>Note/UTR</th>
+                  <th>UTR/UPI</th>
                 </tr>
               </thead>
               <tbody>
@@ -184,7 +204,18 @@ const TransactionsPanel = () => {
                         </span>
                       </td>
                       <td>{transaction.date}</td>
-                      <td>{transaction.note}</td>
+                      <td>
+                        {/* Show UTR and UPI in the same cell, if available */}
+                        {transaction.note}
+                        {transaction.upi && transaction.upi !== "-" && (
+                          <>
+                            <br />
+                            <span style={{ color: "#007b83" }}>
+                              UPI: {transaction.upi}
+                            </span>
+                          </>
+                        )}
+                      </td>
                     </tr>
                   ))
                 ) : (

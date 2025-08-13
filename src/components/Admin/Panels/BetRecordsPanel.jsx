@@ -3,10 +3,10 @@ import adminAxios from "../../utils/adminAxios";
 import "./panels.css";
 
 const games = [
-  "DIAMOND KING",
-  "JAIPUR KING",
   "FARIDABAD",
+  "JAIPUR KING",
   "GHAZIABAD",
+  "DIAMOND KING",
   "GALI",
   "DISAWER",
 ];
@@ -75,20 +75,27 @@ const BetRecordsPanel = () => {
     const createdAtMap = {};
 
     bets.forEach((bet) => {
+      // Number
       if (bet.number !== "" && bet.number !== undefined) {
-        numberMap[bet.number.padStart(2, "0")] = bet.amount || 0;
-        statusMap[bet.number.padStart(2, "0")] = bet.status || "-";
-        createdAtMap[bet.number.padStart(2, "0")] = bet.created_at || "";
+        const num = bet.number.padStart(2, "0");
+        numberMap[num] = (numberMap[num] || 0) + (bet.amount || 0);
+        // Status and createdAt: show latest (optional, else keep as before)
+        statusMap[num] = bet.status || "-";
+        createdAtMap[num] = bet.created_at || "";
       }
+      // Andar
       if (bet.andar_number !== "" && bet.andar_number !== undefined) {
-        andarMap[bet.andar_number.padStart(2, "0")] = bet.andarAmount || 0;
-        statusMap[bet.andar_number.padStart(2, "0")] = bet.status || "-";
-        createdAtMap[bet.andar_number.padStart(2, "0")] = bet.created_at || "";
+        const num = bet.andar_number.padStart(2, "0");
+        andarMap[num] = (andarMap[num] || 0) + (bet.andarAmount || 0);
+        statusMap[num] = bet.status || "-";
+        createdAtMap[num] = bet.created_at || "";
       }
+      // Bahar
       if (bet.bahar_number !== "" && bet.bahar_number !== undefined) {
-        baharMap[bet.bahar_number.padStart(2, "0")] = bet.baharAmount || 0;
-        statusMap[bet.bahar_number.padStart(2, "0")] = bet.status || "-";
-        createdAtMap[bet.bahar_number.padStart(2, "0")] = bet.created_at || "";
+        const num = bet.bahar_number.padStart(2, "0");
+        baharMap[num] = (baharMap[num] || 0) + (bet.baharAmount || 0);
+        statusMap[num] = bet.status || "-";
+        createdAtMap[num] = bet.created_at || "";
       }
     });
 

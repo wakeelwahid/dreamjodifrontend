@@ -3,6 +3,61 @@ import "./NumberPage.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import API from "../../../api/axiosSetup";
 
+// GAME_SCHEDULES must match Boxes.jsx
+const GAME_SCHEDULES = [
+  {
+    key: "faridabad",
+    name: "Faridabad",
+    closeTime: "17:30",
+    openTime: "10:00",
+  },
+  {
+    key: "jaipur",
+    name: "Jaipur King",
+    closeTime: "19:50",
+    openTime: "10:00",
+  },
+  {
+    key: "ghaziabad",
+    name: "Ghaziabad",
+    closeTime: "21:20",
+    openTime: "10:00",
+  },
+  {
+    key: "diamond",
+    name: "Diamond King",
+    closeTime: "22:50",
+    openTime: "10:00",
+  },
+  {
+    key: "gali",
+    name: "Gali",
+    closeTime: "23:20",
+    openTime: "10:00",
+  },
+  {
+    key: "disawer",
+    name: "Disawer",
+    closeTime: "02:30",
+    openTime: "10:00",
+  },
+];
+
+// Get current IST time as a Date object
+function getNowIST() {
+  const now = new Date();
+  const istOffset = 330; // 5:30 in minutes
+  const utc = now.getTime() + now.getTimezoneOffset() * 60000;
+  return new Date(utc + istOffset * 60000);
+}
+
+// Parse "HH:MM" to Date object (today) in IST
+function parseTime(str) {
+  const [h, m] = str.split(":").map(Number);
+  const now = getNowIST();
+  return new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m, 0, 0);
+}
+
 function NumberPage() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -15,8 +70,10 @@ function NumberPage() {
   const [activeSection, setActiveSection] = useState("all");
   const [errorMsg, setErrorMsg] = useState("");
   const [balanceError, setBalanceError] = useState("");
+  // For time up modal
+  const [timeUpModal, setTimeUpModal] = useState(false);
 
-  const standardAmounts = [10, 50, 100, 300, 500, 1000];
+  const standardAmounts = [10, 20, 30, 50, 100, 300];
   const allNumbers = Array.from({ length: 100 }, (_, i) => i + 1);
   const andarNumbers = Array.from({ length: 10 }, (_, i) => i);
   const baharNumbers = Array.from({ length: 10 }, (_, i) => i);
@@ -92,6 +149,31 @@ function NumberPage() {
         return;
       }
     }
+
+    // --- Time up check (auto redirect if closeTime passed) ---
+    // Find current game schedule by name (case-insensitive)
+    const gameSchedule = GAME_SCHEDULES.find(
+      (g) => g.name.toLowerCase() === gameName.toLowerCase()
+    );
+    if (gameSchedule) {
+      const now = getNowIST();
+      const close = parseTime(gameSchedule.closeTime);
+      const open = parseTime(gameSchedule.openTime);
+      // Overnight close (e.g. open 10:00, close 02:30 next day)
+      let isClosed;
+      if (open < close) {
+        isClosed = now >= close;
+      } else {
+        // Overnight: close is next day
+        isClosed = now >= close && now < open;
+      }
+      if (isClosed) {
+        setTimeUpModal(true);
+        return;
+      }
+    }
+    // --- End time up check ---
+
     try {
       for (const key in selectedNumbers) {
         const bet = selectedNumbers[key];
@@ -340,6 +422,36 @@ function NumberPage() {
             </div>
           </div>
           <div className="popup-overlay" onClick={closeAmountPopup}></div>
+        </div>
+      )}
+
+      {/* Time up modal */}
+      {timeUpModal && (
+        <div className="amount-popup-container">
+          <div className="amount-popup">
+            <h3 style={{ color: "red", textAlign: "center" }}>Time up</h3>
+            <div style={{ textAlign: "center", margin: "10px 0 20px 0" }}>
+              Time up, Play next round!
+            </div>
+            <div className="popup-actions" style={{ justifyContent: "center" }}>
+              <button
+                className="popup-btn confirm"
+                onClick={() => {
+                  setTimeUpModal(false);
+                  navigate("/");
+                }}
+              >
+                OK
+              </button>
+            </div>
+          </div>
+          <div
+            className="popup-overlay"
+            onClick={() => {
+              setTimeUpModal(false);
+              navigate("/");
+            }}
+          ></div>
         </div>
       )}
     </div>

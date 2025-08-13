@@ -51,7 +51,7 @@ const WalletPage = () => {
         // ✅ Dispatch event to update Header
         window.dispatchEvent(new Event("walletUpdateEvent"));
       } catch (error) {
-        console.error("Error fetching wallet/referral data", error);
+       
       }
     };
 
@@ -76,7 +76,7 @@ const WalletPage = () => {
           <div className="amount-card deposit-amount">
             <div className="amount-label">REDEEM COINS</div>
             <div className="amount-value">₹{wallet.winnings}</div>
-            <div className="amount-subtext">Available for Redeem</div>
+            <div className="amount-subtext">Available for Withdraw</div>
           </div>
 
           <div className="amount-card winnings-amount">
@@ -90,8 +90,8 @@ const WalletPage = () => {
             <i className="fas fa-rupee-sign"></i> ADD COINS
           </Link>
 
-          <Link to="/wconfirm" className="action-btn withdraw-btn">
-            <i className="fas fa-wallet"></i> REDEEM COINS
+          <Link to="/withdrawchips" className="action-btn withdraw-btn">
+            <i className="fas fa-wallet"></i> WITHDRAW COINS
           </Link>
         </div>
       </div>

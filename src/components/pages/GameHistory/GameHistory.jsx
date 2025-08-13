@@ -52,7 +52,7 @@ const GameHistory = () => {
           "Failed to fetch bet history. Check your login and try again.\n" +
             (error?.response?.data?.error || error.message)
         );
-        console.error("Fetch error:", error);
+       
       } finally {
         setLoading(false);
       }

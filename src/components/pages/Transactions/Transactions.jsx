@@ -19,11 +19,21 @@ const Transactions = () => {
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        const token = localStorage.getItem("token");
-
         const res = await API.get("/transactions/");
-
-        const formatted = res.data.map((tx, index) => {
+        // Remove duplicate transactions by unique id (if backend sends multiple for same request)
+        const txMap = new Map();
+        res.data.forEach((tx) => {
+          // Use tx.id or tx.related_withdraw/related_deposit or a unique field from backend
+          const uniqueKey = tx.related_withdraw || tx.related_deposit || tx.id;
+          // Always keep the latest (by created_at)
+          if (
+            !txMap.has(uniqueKey) ||
+            new Date(tx.created_at) > new Date(txMap.get(uniqueKey).created_at)
+          ) {
+            txMap.set(uniqueKey, tx);
+          }
+        });
+        const formatted = Array.from(txMap.values()).map((tx) => {
           let dateObj = null;
           if (tx.created_at) {
             const [datePart, timePart] = tx.created_at.split(" ");
@@ -40,7 +50,7 @@ const Transactions = () => {
             );
           }
           return {
-            id: index + 1,
+            id: tx.id,
             dateObj,
             date: dateObj
               ? dateObj.toLocaleDateString("en-IN")
@@ -56,13 +66,11 @@ const Transactions = () => {
               : "Completed",
           };
         });
-
         setTransactions(formatted);
       } catch (error) {
-        console.error("Failed to load transactions", error);
+        // handle error
       }
     };
-
     fetchTransactions();
   }, []);
 

@@ -42,7 +42,7 @@ const UsersPanel = () => {
       setUsers(response.data);
       setError(null);
     } catch (error) {
-      console.error("Error fetching users:", error);
+      
       setError("Failed to fetch users data");
     } finally {
       setLoading(false);
@@ -175,19 +175,16 @@ const UsersPanel = () => {
   const toggleUserStatus = async (userId, currentStatus) => {
     try {
       const newStatus = currentStatus === "active" ? "blocked" : "active";
-      // You can implement the API call here
-      console.log(
-        `Toggle status for user ${userId} from ${currentStatus} to ${newStatus}`
-      );
+     
       // After successful API call, refresh the users list
       // await fetchUsers();
     } catch (error) {
-      console.error("Error toggling user status:", error);
+      
     }
   };
 
   const viewUserDetails = (userId) => {
-    console.log(`View details for user ${userId}`);
+    
     // You can implement navigation to user details page here
   };
 

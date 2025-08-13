@@ -64,7 +64,7 @@ const AddChips = () => {
         </div>
         {popupMessage && <div className="popup-message">{popupMessage}</div>}
         <div className="amount-buttons">
-          {[100, 200, 500, 1000].map((amt) => (
+          {[100, 200,300,400, 500,600,700,800,900, 1000].map((amt) => (
             <button
               key={amt}
               onClick={() => handleAmountChange(amt)}
@@ -75,7 +75,7 @@ const AddChips = () => {
           ))}
         </div>
 
-        <div className="calculation-box">
+        {/* <div className="calculation-box">
           <div className="calculation-row">
             <span>Deposit Amount (Excl. Govt. Tax)</span>
             <span>₹{(amount - gst).toFixed(2)}</span>
@@ -92,7 +92,7 @@ const AddChips = () => {
             <span>Total (A + B)</span>
             <span>₹{amount}</span>
           </div>
-        </div>
+        </div> */}
 
         <div className="form-group">
           <button
@@ -120,15 +120,7 @@ const AddChips = () => {
         </div>
       </div>
 
-      <div className="deposit-info">
-        <h3>📌 Deposit Information:</h3>
-        <ul>
-          <li>Minimum deposit: ₹100</li>
-          <li>Instant UPI deposits (Max ₹1,000)</li>
-          <li>28% GST applicable on all deposits</li>
-          
-        </ul>
-      </div>
+     
     </div>
   );
 };

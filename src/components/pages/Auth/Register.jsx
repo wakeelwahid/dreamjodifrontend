@@ -99,7 +99,7 @@ const Register = () => {
       });
       navigate("/login");
     } catch (err) {
-      console.error("Registration error:", err.response?.data || err.message);
+      
       const data = err.response?.data;
       if (err.response?.status === 400) {
         if (data?.mobile) {

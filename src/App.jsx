@@ -2,6 +2,7 @@ import "./App.css";
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import GameAnimations from "./components/GameAnimations";
+import NotFound from "./components/NotFound";
 import Header from "./components/header/Header";
 import Footer from "./components/Footer/Footer";
 import TopSection from "./components/top-section/Top_Section";
@@ -35,7 +36,7 @@ import AgeVerification from "./components/AgeVerification/AgeVerification";
 import AuthGuard from "./components/AuthGuard/AuthGuard";
 import ViewResult from "./components/view-result/ViewResult";
 import DepositNotice from "./components/pages/DepositNotice/DepositNotice";
-import WithdrawNotice from "./components/pages/WithdrawalConfirm/WithdrawalConfirm";
+
 
 import API from "./utils/userAxios";
 
@@ -82,6 +83,7 @@ function App() {
   });
   const [blocked, setBlocked] = useState(false);
   const [checked, setChecked] = useState(false);
+  const [unauthorized, setUnauthorized] = useState(false);
 
   // Add to Home Screen prompt state
   const [deferredPrompt, setDeferredPrompt] = useState(null);
@@ -89,21 +91,29 @@ function App() {
 
   useEffect(() => {
     const checkStatus = async () => {
-      const token = localStorage.getItem("token");
-      if (!token) {
+      const accessToken = localStorage.getItem("access_token");
+      if (!accessToken) {
         setChecked(true);
         return;
       }
       try {
-        const headers = { Authorization: `Bearer ${token}` };
+        const headers = { Authorization: `Bearer ${accessToken}` };
         const res = await API.get("/profile/", { headers });
         if (res.data.status === "blocked") {
           setBlocked(true);
-          localStorage.removeItem("token");
+          localStorage.removeItem("access_token");
+          localStorage.removeItem("refresh_token");
         }
       } catch (err) {
-        // Agar backend se 403/401 aaye toh bhi block dikhao
-        if (err.response && err.response.status === 403) setBlocked(true);
+        // Agar backend se 403/401/invalid token aaye toh logout and redirect
+        if (
+          err.response &&
+          (err.response.status === 401 || err.response.status === 403)
+        ) {
+          localStorage.removeItem("access_token");
+          localStorage.removeItem("refresh_token");
+          setUnauthorized(true);
+        }
       }
       setChecked(true);
     };
@@ -127,6 +137,14 @@ function App() {
       });
     }
   };
+
+  // If unauthorized, redirect to login (prevent infinite loop)
+  if (unauthorized) {
+    if (window.location.pathname !== "/login") {
+      window.location.href = "/login";
+    }
+    return null;
+  }
 
   if (!checked) return null; // Jab tak check nahi hua, kuch bhi mat dikhao
 
@@ -212,16 +230,20 @@ function App() {
                     path="/withdrawalchipssuccess"
                     element={<WithdrawalChipsSuccess />}
                   />
-                  <Route path="/wconfirm" element={<WithdrawNotice />} />
+                 
                   <Route path="/login" element={<Login />} />
                   <Route path="/register" element={<Register />} />
                   <Route path="/game-rules" element={<GameRules />} />
                   <Route path="/view-result" element={<ViewResult />} />
+                  {/* 404 Route */}
+                  <Route path="*" element={<NotFound />} />
                 </Routes>
                 <Footer />
               </AuthGuard>
             }
           />
+          {/* Top-level 404 fallback for any other unmatched route */}
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>
     </>

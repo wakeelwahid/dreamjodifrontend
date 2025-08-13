@@ -72,7 +72,7 @@ const BetSuccessPage = () => {
           <div className="bet-details">
             
             
-            <div className="detail-row">
+            <div className="detail-rowss">
               <span className="detail-label">Amount:</span>
               <span className="detail-value">₹{amount || "0"}</span>
             </div>

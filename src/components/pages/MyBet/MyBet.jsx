@@ -30,7 +30,7 @@ const MyBet = () => {
 
         setBets(Object.values(grouped));
       } catch (error) {
-        console.error("Fetch error:", error);
+        
         setBets([]);
       } finally {
         setLoading(false);
@@ -81,7 +81,7 @@ const MyBet = () => {
               </div>
 
               <div className="bet-footer">
-                <span className="bet-status bet-status-pending">Pending</span>
+                <span className="bet-status bet-status-pending">Confirm</span>
                 <span className="bet-amount">
                   Total Numbers: {group.bets.length}
                 </span>

@@ -70,7 +70,7 @@ const GameTimeTable = () => {
 
       setGameSchedule(updatedSchedule);
     } catch (error) {
-      console.error("Error fetching game status:", error);
+      
       setGameSchedule(gameTimings);
     }
   };
