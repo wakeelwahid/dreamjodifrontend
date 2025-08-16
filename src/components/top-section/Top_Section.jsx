@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import "./Top_section.css";
+
 import { Link } from "react-router-dom";
 
 const TopSection = () => {
@@ -111,8 +112,10 @@ const TopSection = () => {
               alignItems: "center",
               gap: 8,
               justifyContent: "center",
+              cursor: "pointer",
             }}
             onClick={() => navigate("/game-rules")}
+            tabIndex={0}
           >
             <i className="fas fa-book"></i>
             <span>Game Rules</span>
@@ -136,6 +139,7 @@ const TopSection = () => {
           </motion.button>
 
           <button
+            to="/view-result"
             className="action-btn view-result-btn"
             style={{
               width: "100%",
@@ -143,8 +147,10 @@ const TopSection = () => {
               alignItems: "center",
               gap: 8,
               justifyContent: "center",
+              cursor: "pointer",
             }}
             onClick={() => navigate("/view-result")}
+            tabIndex={0}
           >
             <i className="fas fa-chart-line"></i>
             <span>View Result</span>

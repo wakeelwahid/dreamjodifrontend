@@ -34,13 +34,20 @@ const WithdrawChips = () => {
       setError("Please enter a valid amount.");
       return;
     }
-    if (parseInt(amount) < 100) {
+    const amt = parseInt(amount);
+    if (amt < 100) {
       setError("Minimum withdrawal amount is ₹100.");
       return;
     }
-    if (parseInt(amount) > 30000) {
+    if (amt > 30000) {
       setError(
         "Maximum withdrawal limit is ₹30,000. You cannot withdraw above ₹30,000 in a single request."
+      );
+      return;
+    }
+    if (amt % 10 !== 0) {
+      setError(
+        "Withdrawal amount must be divisible by 10 (e.g. 100, 110, 120, ...)"
       );
       return;
     }
@@ -49,9 +56,7 @@ const WithdrawChips = () => {
       return;
     }
     if (upi.trim() !== lastDepositUpi.trim()) {
-      setError(
-        "UPI MisMatch"
-      );
+      setError("UPI MisMatch");
       return;
     }
 
@@ -113,19 +118,20 @@ const WithdrawChips = () => {
               required
             />
             {error && (
-            <div
-              className="form-error"
-              style={{ color: "red", marginBottom: 8 }}
-            >
-              {error}
-            </div>
-          )}
+              <div
+                className="form-error"
+                style={{ color: "red", marginBottom: 8 }}
+              >
+                {error}
+              </div>
+            )}
             <p style={{ marginTop: "5px" }}>
-              <span style={{ color: "red" }}>नोट: </span> 
-              आपने जिस UPI ID से आखिरी बार जमा किया था, उसी UPI मे विड्रॉ (withdraw) होगा।
+              <span style={{ color: "red" }}>नोट: </span>
+              आपने जिस UPI ID से आखिरी बार जमा किया था, उसी UPI मे विड्रॉ
+              (withdraw) होगा।
             </p>
           </div>
-          
+
           {success && (
             <div
               className="form-success"

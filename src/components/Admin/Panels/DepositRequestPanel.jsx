@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
 import adminAxios from "../../utils/adminAxios";
 import "./panels.css";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 const DepositRequestPanel = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -196,27 +201,14 @@ const DepositRequestPanel = () => {
                     <td className="date-cell">
                       <div className="datetime">
                         <span className="date">
-                          {new Date(deposit.created_at).toLocaleString(
-                            "en-IN",
-                            {
-                              timeZone: "Asia/Kolkata",
-                              day: "2-digit",
-                              month: "2-digit",
-                              year: "numeric",
-                            }
-                          )}
+                          {dayjs(deposit.created_at)
+                            .tz("Asia/Kolkata")
+                            .format("DD/MM/YYYY")}
                         </span>
                         <span className="time">
-                          {new Date(deposit.created_at).toLocaleString(
-                            "en-IN",
-                            {
-                              timeZone: "Asia/Kolkata",
-                              hour: "2-digit",
-                              minute: "2-digit",
-                              second: "2-digit",
-                              hour12: true,
-                            }
-                          )}
+                          {dayjs(deposit.created_at)
+                            .tz("Asia/Kolkata")
+                            .format("hh:mm:ss A")}
                         </span>
                       </div>
                     </td>
@@ -298,10 +290,9 @@ const DepositRequestPanel = () => {
                 <div className="detail-row">
                   <span>Date:</span>
                   <strong>
-                    {new Date(selectedDeposit.created_at).toLocaleString(
-                      "en-IN",
-                      { timeZone: "Asia/Kolkata" }
-                    )}
+                    {dayjs(selectedDeposit.created_at)
+                      .tz("Asia/Kolkata")
+                      .format("DD/MM/YYYY hh:mm:ss A")}
                   </strong>
                 </div>
               </div>

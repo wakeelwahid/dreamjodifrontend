@@ -1,27 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import "./Boxes.css";
-import {
-  FaCrown,
-  FaGem,
-  FaCoins,
-  FaTrophy,
-  FaLock,
-  FaClock,
-  FaArrowRight,
-} from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import "./Boxes.css";
+import userAxios from "../../utils/userAxios";
+import { FaCrown, FaGem, FaLock, FaArrowRight } from "react-icons/fa";
 
-// Parse "HH:MM" to Date object (today) in IST
-function parseTime(str) {
-  const [h, m] = str.split(":").map(Number);
-  const now = getNowIST();
-  // Create a date in IST for today
-  return new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m, 0, 0);
-}
+const ICON_MAP = {
+  faridabad: <FaCrown />,
+  jaipur: <FaCrown />,
+  ghaziabad: <FaCrown />,
+  diamond: <FaGem />,
+  gali: <FaCrown />,
+  disawer: <FaCrown />,
+};
 
 // Format "HH:MM" to 12hr string in IST
 function formatTime(str) {
+  if (!str) return "-";
   const [h, m] = str.split(":").map(Number);
   const now = getNowIST();
   const date = new Date(
@@ -41,17 +36,18 @@ function formatTime(str) {
   });
 }
 
-// Check if now is between start and end (handles overnight)
-function isBetween(now, start, end) {
-  if (start < end) return now >= start && now < end;
-  return now >= start || now < end;
+// Parse "HH:MM" to Date object (today) in IST
+function parseTime(str) {
+  const [h, m] = str.split(":").map(Number);
+  const now = getNowIST();
+  return new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m, 0, 0);
 }
 
 // For all games: lock only after closeTime
 function getGameLockStatus(game, now) {
+  if (!game.openTime || !game.closeTime) return { locked: true, lockMsg: "-" };
   const open = parseTime(game.openTime);
   const close = parseTime(game.closeTime);
-  // If open < close (same day): open between open and close
   if (open < close) {
     if (now >= open && now < close) {
       return {
@@ -80,94 +76,6 @@ function getGameLockStatus(game, now) {
   }
 }
 
-const GAME_SCHEDULES = [
-  {
-    key: "faridabad",
-    name: "Faridabad",
-    icon: <FaCrown />,
-    closeTime: "17:30",
-    resultTime: "18:10",
-    wining: "1/95",
-    openTime: "10:00",
-    color: "#50C878",
-    btnColor: "#50C878",
-    bgColor: "rgba(25, 25, 25, 0.9)",
-    borderColor: "#50C878",
-    path: "/faridabad",
-  },
-  {
-    key: "jaipur",
-    name: "Jaipur King",
-    icon: <FaCrown />,
-    closeTime: "19:50",
-    resultTime: "20:00",
-    wining: "1/100",
-    openTime: "10:00",
-    color: "#FFD700",
-    btnColor: "#FFD700",
-    bgColor: "rgba(25, 25, 25, 0.9)",
-    borderColor: "#FFD700",
-    path: "/jaipur",
-  },
-  {
-    key: "ghaziabad",
-    name: "Ghaziabad",
-    icon: <FaCrown />,
-    closeTime: "21:20",
-    resultTime: "22:10",
-    wining: "1/95",
-    openTime: "10:00",
-    color: "#4169E1",
-    btnColor: "#4169E1",
-    bgColor: "rgba(25, 25, 25, 0.9)",
-    borderColor: "#4169E1",
-    path: "/ghaziabad",
-  },
-  {
-    key: "diamond",
-    name: "Diamond King",
-    icon: <FaGem />,
-    closeTime: "22:50",
-    resultTime: "23:00",
-    wining: "1/100",
-    openTime: "10:00",
-    color: "#E91E63",
-    btnColor: "#E91E63",
-    bgColor: "rgba(25, 25, 25, 0.9)",
-    borderColor: "#E91E63",
-    path: "/diamond",
-  },
-  {
-    key: "gali",
-    name: "Gali",
-    icon: <FaCrown />,
-    closeTime: "23:20",
-    resultTime: "12:00",
-    wining: "1/95",
-    openTime: "10:00",
-    color: "#9370DB",
-    btnColor: "#9370DB",
-    bgColor: "rgba(25, 25, 25, 0.9)",
-    borderColor: "#9370DB",
-    path: "/gali",
-  },
-
-  {
-    key: "disawer",
-    name: "Disawer",
-    icon: <FaGem />,
-    closeTime: "02:30",
-    resultTime: "05:00",
-    wining: "1/95",
-    openTime: "10:00",
-    color: "#FF6B6B",
-    btnColor: "#FF6B6B",
-    bgColor: "rgba(25, 25, 25, 0.9)",
-    borderColor: "#FF6B6B",
-    path: "/disawer",
-  },
-];
-
 // Get current IST time as a Date object
 function getNowIST() {
   const now = new Date();
@@ -178,6 +86,7 @@ function getNowIST() {
 
 const Boxes = () => {
   const [now, setNow] = useState(getNowIST());
+  const [gameSchedules, setGameSchedules] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -187,11 +96,28 @@ const Boxes = () => {
     return () => clearInterval(timer);
   }, []);
 
+  useEffect(() => {
+    async function fetchSchedules() {
+      try {
+        const res = await userAxios.get("/game-schedules/");
+        // Add icon property to each game
+        const withIcons = (res.data.schedules || []).map((g) => ({
+          ...g,
+          icon: ICON_MAP[g.key] || <FaCrown />,
+        }));
+        setGameSchedules(withIcons);
+      } catch (err) {
+        setGameSchedules([]);
+      }
+    }
+    fetchSchedules();
+  }, []);
+
   return (
     <div className="game-container">
       {/* Game Cards Grid */}
       <div className="game-cards-grid">
-        {GAME_SCHEDULES.map((game, idx) => {
+        {gameSchedules.map((game, idx) => {
           const status = getGameLockStatus(game, now);
           return (
             <motion.div

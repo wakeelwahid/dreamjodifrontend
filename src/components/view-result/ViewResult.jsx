@@ -7,8 +7,8 @@ const GAME_NAMES = [
   "FARIDABAD",
   "JAIPUR KING",
   "GHAZIABAD",
-  "GALI",
   "DIAMOND KING",
+  "GALI",
   "DISAWER",
 ];
 

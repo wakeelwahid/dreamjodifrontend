@@ -64,7 +64,7 @@ const AddChips = () => {
         </div>
         {popupMessage && <div className="popup-message">{popupMessage}</div>}
         <div className="amount-buttons">
-          {[100, 200,300,400, 500,600,700,800,900, 1000].map((amt) => (
+          {[100, 200,300,400, 500,600,700,800,900,999].map((amt) => (
             <button
               key={amt}
               onClick={() => handleAmountChange(amt)}

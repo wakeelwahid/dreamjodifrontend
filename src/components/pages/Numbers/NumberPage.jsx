@@ -2,46 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./NumberPage.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import API from "../../../api/axiosSetup";
-
-// GAME_SCHEDULES must match Boxes.jsx
-const GAME_SCHEDULES = [
-  {
-    key: "faridabad",
-    name: "Faridabad",
-    closeTime: "17:30",
-    openTime: "10:00",
-  },
-  {
-    key: "jaipur",
-    name: "Jaipur King",
-    closeTime: "19:50",
-    openTime: "10:00",
-  },
-  {
-    key: "ghaziabad",
-    name: "Ghaziabad",
-    closeTime: "21:20",
-    openTime: "10:00",
-  },
-  {
-    key: "diamond",
-    name: "Diamond King",
-    closeTime: "22:50",
-    openTime: "10:00",
-  },
-  {
-    key: "gali",
-    name: "Gali",
-    closeTime: "23:20",
-    openTime: "10:00",
-  },
-  {
-    key: "disawer",
-    name: "Disawer",
-    closeTime: "02:30",
-    openTime: "10:00",
-  },
-];
+import userAxios from "../../../utils/userAxios";
 
 // Get current IST time as a Date object
 function getNowIST() {
@@ -70,8 +31,8 @@ function NumberPage() {
   const [activeSection, setActiveSection] = useState("all");
   const [errorMsg, setErrorMsg] = useState("");
   const [balanceError, setBalanceError] = useState("");
-  // For time up modal
   const [timeUpModal, setTimeUpModal] = useState(false);
+  const [gameSchedules, setGameSchedules] = useState([]);
 
   const standardAmounts = [10, 20, 30, 50, 100, 300];
   const allNumbers = Array.from({ length: 100 }, (_, i) => i + 1);
@@ -79,7 +40,19 @@ function NumberPage() {
   const baharNumbers = Array.from({ length: 10 }, (_, i) => i);
 
   const MIN_ENTRY = 10;
-  const MAX_ENTRY = 10000;
+  const MAX_ENTRY = 2000;
+
+  useEffect(() => {
+    async function fetchSchedules() {
+      try {
+        const res = await userAxios.get("/game-schedules/");
+        setGameSchedules(res.data.schedules || []);
+      } catch (err) {
+        setGameSchedules([]);
+      }
+    }
+    fetchSchedules();
+  }, []);
 
   const openAmountPopup = (number, section) => {
     setCurrentSelection({ number, section });
@@ -99,28 +72,28 @@ function NumberPage() {
 
   const confirmAmount = (amount) => {
     const amt = Number(amount);
-    if (
-      currentSelection &&
-      amt >= MIN_ENTRY &&
-      amt <= MAX_ENTRY &&
-      Number.isInteger(amt)
-    ) {
-      const key = `${currentSelection.number}-${currentSelection.section}`;
-      setSelectedNumbers((prev) => ({
-        ...prev,
-        [key]: {
-          amount: amt,
-          section: currentSelection.section,
-          number: currentSelection.number,
-        },
-      }));
-      setErrorMsg("");
-      closeAmountPopup();
-    } else {
+    if (!currentSelection) return;
+    if (amt < MIN_ENTRY || amt > MAX_ENTRY || !Number.isInteger(amt)) {
       setErrorMsg(
         `Bet amount must be between ₹${MIN_ENTRY} and ₹${MAX_ENTRY} (whole number).`
       );
+      return;
     }
+    if (amt % 10 !== 0) {
+      setErrorMsg(`Amount must be a multiple of 10 (e.g. 10, 20, 30, ...).`);
+      return;
+    }
+    const key = `${currentSelection.number}-${currentSelection.section}`;
+    setSelectedNumbers((prev) => ({
+      ...prev,
+      [key]: {
+        amount: amt,
+        section: currentSelection.section,
+        number: currentSelection.number,
+      },
+    }));
+    setErrorMsg("");
+    closeAmountPopup();
   };
 
   const removeNumber = (key) => {
@@ -152,7 +125,7 @@ function NumberPage() {
 
     // --- Time up check (auto redirect if closeTime passed) ---
     // Find current game schedule by name (case-insensitive)
-    const gameSchedule = GAME_SCHEDULES.find(
+    const gameSchedule = gameSchedules.find(
       (g) => g.name.toLowerCase() === gameName.toLowerCase()
     );
     if (gameSchedule) {
